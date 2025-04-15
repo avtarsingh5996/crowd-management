@@ -1,0 +1,176 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: Deploys a crowd management solution using Amazon Rekognition, Kinesis, Lambda, S3, DynamoDB, SNS, and CloudWatch.
+
+Parameters:
+  KinesisStreamName:
+    Type: String
+    Default: CrowdVideoStream
+    Description: Name of the Kinesis Video Stream.
+  S3BucketName:
+    Type: String
+    Default: crowd-frames-bucket
+    Description: Name of the S3 bucket for storing video frames.
+  DynamoDBTableName:
+    Type: String
+    Default: CrowdMetrics
+    Description: Name of the DynamoDB table for crowd metrics.
+  SNSTopicName:
+    Type: String
+    Default: CrowdAlerts
+    Description: Name of the SNS topic for alerts.
+
+Resources:
+  # S3 Bucket for Video Frames
+  FramesBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: !Ref S3BucketName
+      BucketEncryption:
+        ServerSideEncryptionConfiguration:
+          - ServerSideEncryptionByDefault:
+              SSEAlgorithm: AES256
+      LifecycleConfiguration:
+        Rules:
+          - Id: ArchiveOldFrames
+            Status: Enabled
+            ExpirationInDays: 30
+
+  # DynamoDB Table for Crowd Metrics
+  CrowdMetricsTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: !Ref DynamoDBTableName
+      AttributeDefinitions:
+        - AttributeName: timestamp
+          AttributeType: N
+      KeySchema:
+        - AttributeName: timestamp
+          KeyType: HASH
+      BillingMode: PAY_PER_REQUEST
+
+  # Kinesis Video Stream
+  VideoStream:
+    Type: AWS::KinesisVideo::Stream
+    Properties:
+      Name: !Ref KinesisStreamName
+      DataRetentionInHours: 24
+
+  # SNS Topic for Alerts
+  AlertsTopic:
+    Type: AWS::SNS::Topic
+    Properties:
+      TopicName: !Ref SNSTopicName
+
+  # IAM Role for Lambda
+  LambdaExecutionRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: lambda.amazonaws.com
+            Action: sts:AssumeRole
+      Policies:
+        - PolicyName: LambdaPolicy
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Effect: Allow
+                Action:
+                  - logs:CreateLogGroup
+                  - logs:CreateLogStream
+                  - logs:PutLogEvents
+                Resource: '*'
+              - Effect: Allow
+                Action:
+                  - rekognition:DetectFaces
+                  - rekognition:DetectLabels
+                  - rekognition:DetectModerationLabels
+                Resource: '*'
+              - Effect: Allow
+                Action:
+                  - s3:PutObject
+                Resource: !Sub 'arn:aws:s3:::${S3BucketName}/*'
+              - Effect: Allow
+                Action:
+                  - dynamodb:PutItem
+                Resource: !GetAtt CrowdMetricsTable.Arn
+              - Effect: Allow
+                Action:
+                  - kinesisvideo:GetDataEndpoint
+                  - kinesisvideo:GetMedia
+                Resource: !GetAtt VideoStream.Arn
+
+  # Lambda Function for Frame Processing
+  FrameProcessorLambda:
+    Type: AWS::Lambda::Function
+    Properties:
+      FunctionName: CrowdFrameProcessor
+      Handler: index.lambda_handler
+      Role: !GetAtt LambdaExecutionRole.Arn
+      Runtime: python3.9
+      Timeout: 60
+      MemorySize: 256
+      Code:
+        ZipFile: |
+          import json
+          import boto3
+          import base64
+          import time
+
+          rekognition = boto3.client('rekognition')
+          dynamodb = boto3.resource('dynamodb')
+          s3 = boto3.client('s3')
+
+          def lambda_handler(event, context):
+              table = dynamodb.Table('CrowdMetrics')
+              bucket = 'crowd-frames-bucket'
+              for record in event['Records']:
+                  frame_data = base64.b64decode(record['kinesis']['data'])
+                  response = rekognition.detect_faces(Image={'Bytes': frame_data}, Attributes=['ALL'])
+                  person_count = len(response['FaceDetails'])
+                  timestamp = int(time.time())
+                  table.put_item(Item={
+                      'timestamp': timestamp,
+                      'person_count': person_count
+                  })
+                  s3.put_object(Bucket=bucket, Key=f"frame-{timestamp}.jpg", Body=frame_data)
+              return {'statusCode': 200, 'body': json.dumps('Processed frames')}
+      Environment:
+        Variables:
+          DYNAMODB_TABLE: !Ref DynamoDBTableName
+          S3_BUCKET: !Ref S3BucketName
+
+  # CloudWatch Alarm for Crowd Overflow
+  CrowdOverflowAlarm:
+    Type: AWS::CloudWatch::Alarm
+    Properties:
+      AlarmName: CrowdOverflow
+      MetricName: PersonCount
+      Namespace: CrowdMetrics
+      Threshold: 100
+      ComparisonOperator: GreaterThanThreshold
+      EvaluationPeriods: 2
+      Period: 300
+      Statistic: Average
+      AlarmActions:
+        - !Ref AlertsTopic
+
+Outputs:
+  VideoStreamArn:
+    Description: ARN of the Kinesis Video Stream
+    Value: !GetAtt VideoStream.Arn
+  S3BucketName:
+    Description: Name of the S3 bucket
+    Value: !Ref FramesBucket
+  DynamoDBTableName:
+    Description: Name of the DynamoDB table
+    Value: !Ref CrowdMetricsTable
+  SNSTopicArn:
+    Description: ARN of the SNS topic
+    Value: !Ref AlertsTopic
+  LambdaFunctionArn:
+    Description: ARN of the Lambda function
+    Value: !GetAtt FrameProcessorLambda.Arn
