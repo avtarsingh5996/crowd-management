@@ -45,6 +45,14 @@ export class CrowdManagementStack extends cdk.Stack {
         memoryStoreRetentionPeriodInHours: '24',
         magneticStoreRetentionPeriodInDays: '365',
       },
+      schema: {
+        compositePartitionKey: [
+          {
+            type: 'DIMENSION',
+            name: 'camera_id'
+          }
+        ]
+      }
     });
 
     // Add explicit dependency
