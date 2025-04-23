@@ -1,7 +1,7 @@
 {
   "name": "video-processor",
   "version": "1.0.0",
-  "description": "Lambda function for processing video frames",
+  "description": "Lambda function for processing video streams",
   "main": "dist/index.js",
   "scripts": {
     "build": "tsc",
@@ -13,15 +13,17 @@
     "@aws-sdk/client-s3": "^3.425.0",
     "@aws-sdk/client-rekognition": "^3.425.0",
     "@aws-sdk/client-timestream-write": "^3.425.0",
+    "@aws-sdk/client-kinesis-video": "^3.425.0",
+    "@aws-sdk/client-kinesis-video-media": "^3.425.0",
     "@aws-sdk/lib-dynamodb": "^3.425.0",
     "dotenv": "^16.3.1"
   },
   "devDependencies": {
     "@types/aws-lambda": "^8.10.119",
     "@types/jest": "^24.9.0",
-    "@types/node": "^20.10.5",
+    "@types/node": "^18.18.0",
     "jest": "^24.9.0",
     "ts-jest": "^24.3.0",
-    "typescript": "^5.3.3"
+    "typescript": "^4.9.5"
   }
 } 
