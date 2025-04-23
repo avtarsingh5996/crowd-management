@@ -47,6 +47,9 @@ export class CrowdManagementStack extends cdk.Stack {
       },
     });
 
+    // Add explicit dependency
+    timestreamTable.addDependency(timestreamDb);
+
     // Create Lambda function for video processing
     const videoProcessor = new lambda.Function(this, 'VideoProcessor', {
       runtime: lambda.Runtime.NODEJS_18_X,
@@ -64,12 +67,21 @@ export class CrowdManagementStack extends cdk.Stack {
     // Grant necessary permissions
     videoStorageBucket.grantReadWrite(videoProcessor);
     crowdDataTable.grantReadWriteData(videoProcessor);
+    
+    // Add specific Timestream permissions
     videoProcessor.addToRolePolicy(
       new iam.PolicyStatement({
-        actions: ['timestream:*'],
-        resources: ['*'],
+        actions: [
+          'timestream:WriteRecords',
+          'timestream:DescribeEndpoints',
+          'timestream:Select'
+        ],
+        resources: [
+          `arn:aws:timestream:${this.region}:${this.account}:database/${timestreamDb.databaseName}/table/${timestreamTable.tableName}`
+        ],
       })
     );
+
     videoProcessor.addToRolePolicy(
       new iam.PolicyStatement({
         actions: ['rekognition:*'],
@@ -94,6 +106,14 @@ export class CrowdManagementStack extends cdk.Stack {
 
     new cdk.CfnOutput(this, 'ApiEndpoint', {
       value: api.url,
+    });
+
+    new cdk.CfnOutput(this, 'TimestreamDatabase', {
+      value: timestreamDb.databaseName!,
+    });
+
+    new cdk.CfnOutput(this, 'TimestreamTable', {
+      value: timestreamTable.tableName!,
     });
   }
 } 
