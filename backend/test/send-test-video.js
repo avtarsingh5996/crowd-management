@@ -1,7 +1,7 @@
 const AWS = require('aws-sdk');
 const fs = require('fs');
 const path = require('path');
-const { spawn } = require('child_process');
+const sharp = require('sharp');
 
 // Configure AWS
 AWS.config.update({ region: 'us-east-1' });
@@ -9,36 +9,20 @@ const kinesis = new AWS.Kinesis();
 
 const streamName = 'crowd-video-stream';
 
-// Function to compress image using ffmpeg
-function compressImage(inputPath) {
-  return new Promise((resolve, reject) => {
-    const ffmpeg = spawn('ffmpeg', [
-      '-i', inputPath,
-      '-vf', 'scale=640:480',  // Resize to 640x480
-      '-compression_level', '5', // JPEG compression level
-      '-f', 'image2',
-      '-'
-    ]);
-
-    let imageData = Buffer.alloc(0);
-
-    ffmpeg.stdout.on('data', (data) => {
-      imageData = Buffer.concat([imageData, data]);
-    });
-
-    ffmpeg.on('close', (code) => {
-      if (code === 0) {
-        console.log(`Compressed image size: ${imageData.length} bytes`);
-        resolve(imageData);
-      } else {
-        reject(new Error(`FFmpeg exited with code ${code}`));
-      }
-    });
-
-    ffmpeg.stderr.on('data', (data) => {
-      console.error(`FFmpeg stderr: ${data}`);
-    });
-  });
+// Function to compress image using Sharp
+async function compressImage(inputPath) {
+  try {
+    const imageBuffer = await sharp(inputPath)
+      .resize(640, 480)  // Resize to 640x480
+      .jpeg({ quality: 70 })  // Compress JPEG with 70% quality
+      .toBuffer();
+    
+    console.log(`Compressed image size: ${imageBuffer.length} bytes`);
+    return imageBuffer;
+  } catch (error) {
+    console.error('Error compressing image:', error);
+    throw error;
+  }
 }
 
 async function sendVideoFrame(frameData) {
