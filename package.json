@@ -1,0 +1,25 @@
+{
+  "name": "crowd-management",
+  "version": "1.0.0",
+  "description": "Crowd Management Solution using AWS Services",
+  "scripts": {
+    "build": "npm run build:infrastructure && npm run build:backend && npm run build:frontend",
+    "build:infrastructure": "cd infrastructure && npm run build",
+    "build:backend": "cd backend && npm run build",
+    "build:frontend": "cd frontend && npm run build",
+    "deploy": "cd infrastructure && cdk deploy",
+    "test": "npm run test:infrastructure && npm run test:backend && npm run test:frontend",
+    "test:infrastructure": "cd infrastructure && npm test",
+    "test:backend": "cd backend && npm test",
+    "test:frontend": "cd frontend && npm test"
+  },
+  "dependencies": {
+    "aws-cdk": "^2.0.0",
+    "aws-sdk": "^2.0.0"
+  },
+  "devDependencies": {
+    "typescript": "^4.0.0",
+    "jest": "^27.0.0",
+    "eslint": "^7.0.0"
+  }
+} 
