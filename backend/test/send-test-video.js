@@ -6,6 +6,7 @@ const sharp = require('sharp');
 // Configure AWS
 AWS.config.update({ region: 'us-east-1' });
 const kinesis = new AWS.Kinesis();
+const lambda = new AWS.Lambda();
 
 const streamName = 'crowd-video-stream';
 
@@ -26,17 +27,24 @@ async function compressImage(inputPath) {
 }
 
 async function sendVideoFrame(frameData) {
+  const videoFrame = {
+    cameraId: 'test-camera',
+    timestamp: Date.now(),
+    frameData: frameData.toString('base64')
+  };
+
   const params = {
-    StreamName: streamName,
-    PartitionKey: 'test-camera',
-    Data: frameData
+    FunctionName: 'CrowdManagementStack-VideoProcessor', // Replace with your Lambda function name
+    Payload: JSON.stringify({
+      body: JSON.stringify(videoFrame)
+    })
   };
 
   try {
-    await kinesis.putRecord(params).promise();
-    console.log('Frame sent successfully');
+    const result = await lambda.invoke(params).promise();
+    console.log('Lambda response:', result.Payload);
   } catch (error) {
-    console.error('Error sending frame:', error);
+    console.error('Error invoking Lambda:', error);
   }
 }
 
