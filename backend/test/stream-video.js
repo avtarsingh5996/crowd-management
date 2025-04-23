@@ -1,5 +1,4 @@
-const { KinesisVideoClient, CreateStreamCommand } = require('@aws-sdk/client-kinesis-video');
-const { KinesisVideoArchivedMediaClient, GetHLSStreamingSessionURLCommand } = require('@aws-sdk/client-kinesis-video-archived-media');
+const { KinesisVideoClient, CreateStreamCommand, GetDataEndpointCommand } = require('@aws-sdk/client-kinesis-video');
 const { KinesisVideoMediaClient, PutMediaCommand } = require('@aws-sdk/client-kinesis-video-media');
 const { exec } = require('child_process');
 const fs = require('fs');
@@ -10,7 +9,6 @@ const REGION = 'us-east-1';
 
 // Initialize AWS clients
 const kinesisVideo = new KinesisVideoClient({ region: REGION });
-const kinesisVideoMedia = new KinesisVideoMediaClient({ region: REGION });
 
 async function setupStream() {
   try {
@@ -30,28 +28,42 @@ async function setupStream() {
 }
 
 async function getStreamEndpoint() {
-  const response = await kinesisVideo.send(new GetHLSStreamingSessionURLCommand({
+  const response = await kinesisVideo.send(new GetDataEndpointCommand({
     StreamName: STREAM_NAME,
-    PlaybackMode: 'LIVE',
+    APIName: 'PUT_MEDIA',
   }));
-  return response.HLSStreamingSessionURL;
+  return response.DataEndpoint;
 }
 
 async function streamVideo(videoPath) {
-  // Get the stream endpoint
-  const endpoint = await getStreamEndpoint();
-  console.log('Stream endpoint:', endpoint);
-
-  // Use ffmpeg to stream the video
-  const ffmpegCommand = `ffmpeg -i ${videoPath} -f matroska -c:v copy -an -f kinesis ${endpoint}`;
-  
-  exec(ffmpegCommand, (error, stdout, stderr) => {
-    if (error) {
-      console.error('Error streaming video:', error);
-      return;
+  try {
+    // Get the stream endpoint
+    const endpoint = await getStreamEndpoint();
+    if (!endpoint) {
+      throw new Error('No data endpoint received');
     }
-    console.log('Video streaming completed');
-  });
+    console.log('Stream endpoint:', endpoint);
+
+    // Create a new KinesisVideoMediaClient with the endpoint
+    const kinesisVideoMedia = new KinesisVideoMediaClient({
+      endpoint,
+      region: REGION,
+    });
+
+    // Use ffmpeg to stream the video
+    const ffmpegCommand = `ffmpeg -i ${videoPath} -f matroska -c:v copy -an -f kinesis ${endpoint}`;
+    
+    exec(ffmpegCommand, (error, stdout, stderr) => {
+      if (error) {
+        console.error('Error streaming video:', error);
+        return;
+      }
+      console.log('Video streaming completed');
+    });
+  } catch (error) {
+    console.error('Error in streamVideo:', error);
+    throw error;
+  }
 }
 
 // Main function
