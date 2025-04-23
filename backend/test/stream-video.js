@@ -50,8 +50,17 @@ async function streamVideo(videoPath) {
       region: REGION,
     });
 
-    // Use ffmpeg to stream the video with basic parameters
-    const ffmpegCommand = `ffmpeg -i ${videoPath} -c:v libx264 -f mp4 -an ${endpoint}`;
+    // Use ffmpeg to stream the video with proper parameters
+    const ffmpegCommand = `ffmpeg -i ${videoPath} \
+      -c:v h264 \
+      -b:v 2000k \
+      -maxrate 2000k \
+      -bufsize 4000k \
+      -g 30 \
+      -f mp4 \
+      -movflags frag_keyframe+empty_moov \
+      -an \
+      ${endpoint}`;
     
     console.log('Running ffmpeg command:', ffmpegCommand);
     
