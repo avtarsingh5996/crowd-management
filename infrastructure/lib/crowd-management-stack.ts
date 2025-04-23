@@ -6,6 +6,7 @@ import * as s3 from 'aws-cdk-lib/aws-s3';
 import * as iam from 'aws-cdk-lib/aws-iam';
 import * as timestream from 'aws-cdk-lib/aws-timestream';
 import * as apigateway from 'aws-cdk-lib/aws-apigateway';
+import * as kinesisvideo from 'aws-cdk-lib/aws-kinesisvideo';
 import { Construct } from 'constructs';
 
 export class CrowdManagementStack extends cdk.Stack {
@@ -13,9 +14,10 @@ export class CrowdManagementStack extends cdk.Stack {
     super(scope, id, props);
 
     // Create Kinesis Video Stream
-    const videoStream = new kinesis.Stream(this, 'VideoStream', {
-      streamName: 'crowd-video-stream',
-      shardCount: 1,
+    const videoStream = new kinesisvideo.CfnStream(this, 'VideoStream', {
+      name: 'crowd-video-stream',
+      dataRetentionInHours: 24,
+      mediaType: 'video/h264',
     });
 
     // Create S3 bucket for video storage
@@ -61,15 +63,16 @@ export class CrowdManagementStack extends cdk.Stack {
     // Create Lambda function for video processing
     const videoProcessor = new lambda.Function(this, 'VideoProcessor', {
       runtime: lambda.Runtime.NODEJS_18_X,
-      handler: 'dist/index.handler',
-      code: lambda.Code.fromAsset('../backend/lambda/video-processor/dist'),
-      timeout: cdk.Duration.seconds(300),
+      handler: 'index.handler',
+      code: lambda.Code.fromAsset('backend/lambda/video-processor'),
       environment: {
         BUCKET_NAME: videoStorageBucket.bucketName,
         TABLE_NAME: crowdDataTable.tableName,
         TIMESTREAM_DB: timestreamDb.databaseName!,
         TIMESTREAM_TABLE: timestreamTable.tableName!,
+        VIDEO_STREAM_NAME: videoStream.name,
       },
+      timeout: cdk.Duration.minutes(5),
     });
 
     // Grant necessary permissions
@@ -109,6 +112,23 @@ export class CrowdManagementStack extends cdk.Stack {
         resources: ['*'],
       })
     );
+
+    // Add permissions for Kinesis Video Stream
+    videoProcessor.addToRolePolicy(new iam.PolicyStatement({
+      actions: [
+        'kinesisvideo:GetDataEndpoint',
+        'kinesisvideo:GetMedia',
+      ],
+      resources: [videoStream.attrArn],
+    }));
+
+    // Add Kinesis Video Stream trigger
+    const streamTrigger = new lambda.EventSourceMapping(this, 'StreamTrigger', {
+      target: videoProcessor,
+      eventSourceArn: videoStream.attrArn,
+      batchSize: 1,
+      startingPosition: lambda.StartingPosition.LATEST,
+    });
 
     // Create Lambda function for data retrieval
     const dataRetriever = new lambda.Function(this, 'DataRetriever', {
@@ -174,7 +194,7 @@ export class CrowdManagementStack extends cdk.Stack {
 
     // Output important values
     new cdk.CfnOutput(this, 'VideoStreamName', {
-      value: videoStream.streamName,
+      value: videoStream.name,
     });
 
     new cdk.CfnOutput(this, 'ApiEndpoint', {
