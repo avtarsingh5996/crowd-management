@@ -2,6 +2,7 @@ import { DynamoDB } from 'aws-sdk';
 import { S3 } from 'aws-sdk';
 import { Rekognition } from 'aws-sdk';
 import { TimestreamWrite } from 'aws-sdk';
+import { APIGatewayProxyEvent, APIGatewayProxyResult } from 'aws-lambda';
 
 const dynamoDB = new DynamoDB.DocumentClient();
 const s3 = new S3();
@@ -16,11 +17,25 @@ const TIMESTREAM_TABLE = process.env.TIMESTREAM_TABLE!;
 interface VideoFrame {
   cameraId: string;
   timestamp: number;
-  frameData: Buffer;
+  frameData: string;
 }
 
-export const handler = async (event: any) => {
+interface RekognitionLabel {
+  Name?: string;
+  Confidence?: number;
+  Instances?: Array<{ Confidence?: number }>;
+}
+
+interface RekognitionResponse {
+  Labels?: RekognitionLabel[];
+}
+
+export const handler = async (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {
   try {
+    if (!event.body) {
+      throw new Error('No body provided in the event');
+    }
+
     const videoFrame: VideoFrame = JSON.parse(event.body);
     
     // Save frame to S3
@@ -40,7 +55,7 @@ export const handler = async (event: any) => {
       },
     };
 
-    const rekognitionResult = await rekognition.detectLabels(rekognitionParams).promise();
+    const rekognitionResult = await rekognition.detectLabels(rekognitionParams).promise() as RekognitionResponse;
     
     // Count people in the frame
     const peopleCount = rekognitionResult.Labels?.filter(label => 
@@ -93,11 +108,12 @@ export const handler = async (event: any) => {
     };
   } catch (error) {
     console.error('Error processing video frame:', error);
+    const errorMessage = error instanceof Error ? error.message : 'Unknown error';
     return {
       statusCode: 500,
       body: JSON.stringify({
         message: 'Error processing video frame',
-        error: error.message,
+        error: errorMessage,
       }),
     };
   }
