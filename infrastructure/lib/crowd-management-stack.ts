@@ -20,6 +20,12 @@ export class CrowdManagementStack extends cdk.Stack {
       mediaType: 'video/h264',
     });
 
+    // Create Kinesis Data Stream for processing
+    const dataStream = new kinesis.Stream(this, 'VideoDataStream', {
+      streamName: 'crowd-video-data-stream',
+      shardCount: 1,
+    });
+
     // Ensure the stream name is defined
     const streamName = videoStream.name || 'crowd-video-stream';
 
@@ -74,6 +80,7 @@ export class CrowdManagementStack extends cdk.Stack {
         TIMESTREAM_DB: timestreamDb.databaseName!,
         TIMESTREAM_TABLE: timestreamTable.tableName!,
         VIDEO_STREAM_NAME: streamName,
+        DATA_STREAM_NAME: dataStream.streamName,
       },
       timeout: cdk.Duration.minutes(5),
     });
@@ -81,6 +88,7 @@ export class CrowdManagementStack extends cdk.Stack {
     // Grant necessary permissions
     videoStorageBucket.grantReadWrite(videoProcessor);
     crowdDataTable.grantReadWriteData(videoProcessor);
+    dataStream.grantRead(videoProcessor);
     
     // Add specific Timestream permissions
     videoProcessor.addToRolePolicy(
@@ -125,10 +133,10 @@ export class CrowdManagementStack extends cdk.Stack {
       resources: [videoStream.attrArn],
     }));
 
-    // Add Kinesis Video Stream trigger
+    // Add Kinesis Data Stream trigger
     const streamTrigger = new lambda.EventSourceMapping(this, 'StreamTrigger', {
       target: videoProcessor,
-      eventSourceArn: videoStream.attrArn,
+      eventSourceArn: dataStream.streamArn,
       batchSize: 1,
       startingPosition: lambda.StartingPosition.LATEST,
     });
@@ -198,6 +206,10 @@ export class CrowdManagementStack extends cdk.Stack {
     // Output important values
     new cdk.CfnOutput(this, 'VideoStreamName', {
       value: streamName,
+    });
+
+    new cdk.CfnOutput(this, 'DataStreamName', {
+      value: dataStream.streamName,
     });
 
     new cdk.CfnOutput(this, 'ApiEndpoint', {

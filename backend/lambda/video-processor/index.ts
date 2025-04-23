@@ -7,6 +7,7 @@ import { KinesisVideoMediaClient, GetMediaCommand } from '@aws-sdk/client-kinesi
 import { DynamoDBDocumentClient, PutCommand } from '@aws-sdk/lib-dynamodb';
 import { Stream } from 'stream';
 import { APIGatewayProxyEvent, APIGatewayProxyResult } from 'aws-lambda';
+import { KinesisStreamEvent } from 'aws-lambda/trigger/kinesis';
 
 const dynamoDB = DynamoDBDocumentClient.from(new DynamoDBClient({}));
 const s3 = new S3Client({});
@@ -19,6 +20,7 @@ const TABLE_NAME = process.env.TABLE_NAME!;
 const TIMESTREAM_DB = process.env.TIMESTREAM_DB!;
 const TIMESTREAM_TABLE = process.env.TIMESTREAM_TABLE!;
 const VIDEO_STREAM_NAME = process.env.VIDEO_STREAM_NAME!;
+const DATA_STREAM_NAME = process.env.DATA_STREAM_NAME!;
 const FRAME_RATE = parseInt(process.env.FRAME_RATE || '1'); // Process 1 frame per second
 
 interface VideoFrame {
@@ -147,6 +149,23 @@ async function handleApiGatewayRequest(event: APIGatewayProxyEvent): Promise<API
   }
 }
 
+// Handle Kinesis Data Stream events
+async function handleKinesisEvent(event: KinesisStreamEvent): Promise<void> {
+  for (const record of event.Records) {
+    try {
+      const frameData = Buffer.from(record.kinesis.data, 'base64');
+      const frame: VideoFrame = {
+        cameraId: 'camera1', // You might want to get this from the record metadata
+        timestamp: record.kinesis.approximateArrivalTimestamp,
+        frameData,
+      };
+      await processFrame(frame);
+    } catch (error) {
+      console.error('Error processing Kinesis record:', error);
+    }
+  }
+}
+
 // Handle Kinesis Video Stream
 async function handleVideoStream(): Promise<void> {
   try {
@@ -208,10 +227,15 @@ async function handleVideoStream(): Promise<void> {
   }
 }
 
-export const handler = async (event: APIGatewayProxyEvent | any): Promise<APIGatewayProxyResult | void> => {
+export const handler = async (event: APIGatewayProxyEvent | KinesisStreamEvent | any): Promise<APIGatewayProxyResult | void> => {
   // Check if this is an API Gateway request
   if (event.httpMethod) {
     return handleApiGatewayRequest(event as APIGatewayProxyEvent);
+  }
+  
+  // Check if this is a Kinesis event
+  if (event.Records && event.Records[0]?.kinesis) {
+    return handleKinesisEvent(event as KinesisStreamEvent);
   }
   
   // Otherwise, handle as a video stream
