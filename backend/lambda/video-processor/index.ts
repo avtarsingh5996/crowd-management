@@ -78,26 +78,31 @@ export const handler = async (event: APIGatewayProxyEvent): Promise<APIGatewayPr
     }).promise();
 
     // Store in Timestream for time-series analysis
-    await timestream.writeRecords({
-      DatabaseName: TIMESTREAM_DB,
-      TableName: TIMESTREAM_TABLE,
-      Records: [
-        {
-          Dimensions: [
-            {
-              Name: 'cameraId',
-              Value: videoFrame.cameraId,
-              DimensionValueType: 'VARCHAR',
-            },
-          ],
-          MeasureName: 'peopleCount',
-          MeasureValue: peopleCount.toString(),
-          MeasureValueType: 'BIGINT',
-          Time: videoFrame.timestamp.toString(),
-          TimeUnit: 'MILLISECONDS',
-        },
-      ],
-    }).promise();
+    try {
+      await timestream.writeRecords({
+        DatabaseName: TIMESTREAM_DB,
+        TableName: TIMESTREAM_TABLE,
+        Records: [
+          {
+            Dimensions: [
+              {
+                Name: 'camera_id',
+                Value: videoFrame.cameraId,
+                DimensionValueType: 'VARCHAR',
+              },
+            ],
+            MeasureName: 'people_count',
+            MeasureValue: peopleCount.toString(),
+            MeasureValueType: 'BIGINT',
+            Time: videoFrame.timestamp.toString(),
+            TimeUnit: 'MILLISECONDS',
+          },
+        ],
+      }).promise();
+    } catch (error) {
+      console.error('Error writing to Timestream:', error);
+      // Continue execution even if Timestream write fails
+    }
 
     return {
       statusCode: 200,
