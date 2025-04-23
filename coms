@@ -1,0 +1,25 @@
+# Create a new Cognito User Pool
+aws cognito-idp create-user-pool \
+    --pool-name CrowdManagementUserPool \
+    --auto-verified-attributes email \
+    --policies '{"PasswordPolicy":{"MinimumLength":8,"RequireUppercase":true,"RequireLowercase":true,"RequireNumbers":true,"RequireSymbols":true}}'
+
+# Create an app client for the User Pool
+aws cognito-idp create-user-pool-client \
+    --user-pool-id <YOUR_USER_POOL_ID> \
+    --client-name CrowdManagementAppClient \
+    --no-generate-secret \
+    --explicit-auth-flows ALLOW_USER_PASSWORD_AUTH ALLOW_REFRESH_TOKEN_AUTH
+
+# Create a new AppSync API
+aws appsync create-graphql-api \
+    --name CrowdManagementAPI \
+    --authentication-type AMAZON_COGNITO_USER_POOLS \
+    --user-pool-config '{"userPoolId":"<YOUR_USER_POOL_ID>","awsRegion":"us-east-1"}'
+
+# Create an API key (optional, for testing)
+aws appsync create-api-key \
+    --api-id <YOUR_APPSYNC_API_ID>
+
+
+
