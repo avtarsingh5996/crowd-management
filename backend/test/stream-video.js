@@ -50,15 +50,34 @@ async function streamVideo(videoPath) {
       region: REGION,
     });
 
-    // Use ffmpeg to stream the video
-    const ffmpegCommand = `ffmpeg -i ${videoPath} -f matroska -c:v copy -an -f kinesis ${endpoint}`;
+    // Use ffmpeg to stream the video with proper parameters
+    const ffmpegCommand = `ffmpeg -i ${videoPath} \
+      -c:v libx264 \
+      -preset veryfast \
+      -tune zerolatency \
+      -profile:v baseline \
+      -level 3.0 \
+      -pix_fmt yuv420p \
+      -f mp4 \
+      -movflags frag_keyframe+empty_moov \
+      -g 30 \
+      -b:v 1000k \
+      -maxrate 1000k \
+      -bufsize 2000k \
+      -an \
+      -f mp4 \
+      ${endpoint}`;
+    
+    console.log('Running ffmpeg command:', ffmpegCommand);
     
     exec(ffmpegCommand, (error, stdout, stderr) => {
       if (error) {
         console.error('Error streaming video:', error);
+        console.error('ffmpeg stderr:', stderr);
         return;
       }
       console.log('Video streaming completed');
+      console.log('ffmpeg stdout:', stdout);
     });
   } catch (error) {
     console.error('Error in streamVideo:', error);
