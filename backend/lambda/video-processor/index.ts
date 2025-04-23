@@ -2,8 +2,8 @@ import { DynamoDBClient } from '@aws-sdk/client-dynamodb';
 import { S3Client, PutObjectCommand } from '@aws-sdk/client-s3';
 import { RekognitionClient, DetectLabelsCommand } from '@aws-sdk/client-rekognition';
 import { TimestreamWriteClient, WriteRecordsCommand } from '@aws-sdk/client-timestream-write';
-import { KinesisVideoClient, GetMediaCommand } from '@aws-sdk/client-kinesis-video';
-import { KinesisVideoMediaClient, GetMediaCommand as GetMediaCommandV2 } from '@aws-sdk/client-kinesis-video-media';
+import { KinesisVideoClient, GetDataEndpointCommand } from '@aws-sdk/client-kinesis-video';
+import { KinesisVideoMediaClient, GetMediaCommand } from '@aws-sdk/client-kinesis-video-media';
 import { DynamoDBDocumentClient, PutCommand } from '@aws-sdk/lib-dynamodb';
 import { Stream } from 'stream';
 import { APIGatewayProxyEvent, APIGatewayProxyResult } from 'aws-lambda';
@@ -13,7 +13,6 @@ const s3 = new S3Client({});
 const rekognition = new RekognitionClient({});
 const timestream = new TimestreamWriteClient({});
 const kinesisVideo = new KinesisVideoClient({});
-const kinesisVideoMedia = new KinesisVideoMediaClient({});
 
 const BUCKET_NAME = process.env.BUCKET_NAME!;
 const TABLE_NAME = process.env.TABLE_NAME!;
@@ -152,16 +151,23 @@ async function handleApiGatewayRequest(event: APIGatewayProxyEvent): Promise<API
 async function handleVideoStream(): Promise<void> {
   try {
     // Get the Kinesis Video Stream endpoint
-    const describeStreamResponse = await kinesisVideo.send(new GetMediaCommand({
+    const dataEndpointResponse = await kinesisVideo.send(new GetDataEndpointCommand({
       StreamName: VIDEO_STREAM_NAME,
-      StartSelector: {
-        StartSelectorType: 'NOW',
-      },
+      APIName: 'GET_MEDIA',
     }));
 
+    if (!dataEndpointResponse.DataEndpoint) {
+      throw new Error('No data endpoint received');
+    }
+
+    // Create a new KinesisVideoMediaClient with the endpoint
+    const kinesisVideoMedia = new KinesisVideoMediaClient({
+      endpoint: dataEndpointResponse.DataEndpoint,
+    });
+
     // Get the media stream
-    const mediaResponse = await kinesisVideoMedia.send(new GetMediaCommandV2({
-      StreamARN: describeStreamResponse.StreamARN,
+    const mediaResponse = await kinesisVideoMedia.send(new GetMediaCommand({
+      StreamName: VIDEO_STREAM_NAME,
       StartSelector: {
         StartSelectorType: 'NOW',
       },
