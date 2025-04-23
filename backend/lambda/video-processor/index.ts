@@ -3,9 +3,9 @@ import { S3Client, PutObjectCommand } from '@aws-sdk/client-s3';
 import { RekognitionClient, DetectLabelsCommand } from '@aws-sdk/client-rekognition';
 import { TimestreamWriteClient, WriteRecordsCommand } from '@aws-sdk/client-timestream-write';
 import { APIGatewayProxyEvent, APIGatewayProxyResult } from 'aws-lambda';
-import { marshall } from '@aws-sdk/lib-dynamodb';
+import { DynamoDBDocumentClient, PutCommand } from '@aws-sdk/lib-dynamodb';
 
-const dynamoDB = new DynamoDBClient({});
+const dynamoDB = DynamoDBDocumentClient.from(new DynamoDBClient({}));
 const s3 = new S3Client({});
 const rekognition = new RekognitionClient({});
 const timestream = new TimestreamWriteClient({});
@@ -62,9 +62,9 @@ export const handler = async (event: APIGatewayProxyEvent): Promise<APIGatewayPr
     ).reduce((sum, label) => sum + (label.Instances?.length || 0), 0) || 0;
 
     // Store in DynamoDB
-    await dynamoDB.send(new PutItemCommand({
+    await dynamoDB.send(new PutCommand({
       TableName: TABLE_NAME,
-      Item: marshall({
+      Item: {
         cameraId: videoFrame.cameraId,
         timestamp: videoFrame.timestamp,
         peopleCount,
@@ -73,7 +73,7 @@ export const handler = async (event: APIGatewayProxyEvent): Promise<APIGatewayPr
             label.Name?.toLowerCase() === 'person'
           )?.Confidence || 0,
         },
-      }),
+      },
     }));
 
     // Store in Timestream for time-series analysis
