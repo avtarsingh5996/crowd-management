@@ -1,0 +1,23 @@
+{
+  "name": "data-retriever",
+  "version": "1.0.0",
+  "description": "Lambda function for retrieving crowd data",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "tsc",
+    "clean": "rm -rf dist",
+    "test": "jest"
+  },
+  "dependencies": {
+    "@aws-sdk/client-dynamodb": "^3.425.0",
+    "@aws-sdk/lib-dynamodb": "^3.425.0"
+  },
+  "devDependencies": {
+    "@types/aws-lambda": "^8.10.119",
+    "@types/jest": "^24.9.0",
+    "@types/node": "^20.10.5",
+    "jest": "^24.9.0",
+    "ts-jest": "^24.3.0",
+    "typescript": "^5.3.3"
+  }
+} 

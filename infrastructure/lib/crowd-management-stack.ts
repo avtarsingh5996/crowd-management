@@ -110,6 +110,20 @@ export class CrowdManagementStack extends cdk.Stack {
       })
     );
 
+    // Create Lambda function for data retrieval
+    const dataRetriever = new lambda.Function(this, 'DataRetriever', {
+      runtime: lambda.Runtime.NODEJS_18_X,
+      handler: 'dist/index.handler',
+      code: lambda.Code.fromAsset('../backend/lambda/data-retriever/dist'),
+      timeout: cdk.Duration.seconds(30),
+      environment: {
+        TABLE_NAME: crowdDataTable.tableName,
+      },
+    });
+
+    // Grant necessary permissions
+    crowdDataTable.grantReadData(dataRetriever);
+
     // Create API Gateway
     const api = new apigateway.RestApi(this, 'CrowdManagementApi', {
       restApiName: 'Crowd Management API',
@@ -118,7 +132,45 @@ export class CrowdManagementStack extends cdk.Stack {
 
     // Add API endpoints
     const crowdResource = api.root.addResource('crowd');
-    crowdResource.addMethod('GET', new apigateway.LambdaIntegration(videoProcessor));
+    crowdResource.addMethod('GET', new apigateway.LambdaIntegration(dataRetriever), {
+      methodResponses: [
+        {
+          statusCode: '200',
+          responseParameters: {
+            'method.response.header.Access-Control-Allow-Origin': true,
+          },
+        },
+      ],
+    });
+
+    // Add CORS configuration
+    crowdResource.addMethod('OPTIONS', new apigateway.MockIntegration({
+      integrationResponses: [
+        {
+          statusCode: '200',
+          responseParameters: {
+            'method.response.header.Access-Control-Allow-Headers': "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'",
+            'method.response.header.Access-Control-Allow-Methods': "'GET,OPTIONS'",
+            'method.response.header.Access-Control-Allow-Origin': "'*'",
+          },
+        },
+      ],
+      passthroughBehavior: apigateway.PassthroughBehavior.NEVER,
+      requestTemplates: {
+        'application/json': '{"statusCode": 200}',
+      },
+    }), {
+      methodResponses: [
+        {
+          statusCode: '200',
+          responseParameters: {
+            'method.response.header.Access-Control-Allow-Headers': true,
+            'method.response.header.Access-Control-Allow-Methods': true,
+            'method.response.header.Access-Control-Allow-Origin': true,
+          },
+        },
+      ],
+    });
 
     // Output important values
     new cdk.CfnOutput(this, 'VideoStreamName', {
