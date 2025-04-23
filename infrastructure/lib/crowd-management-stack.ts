@@ -67,7 +67,7 @@ export class CrowdManagementStack extends cdk.Stack {
     const videoProcessor = new lambda.Function(this, 'VideoProcessor', {
       runtime: lambda.Runtime.NODEJS_18_X,
       handler: 'index.handler',
-      code: lambda.Code.fromAsset('backend/lambda/video-processor'),
+      code: lambda.Code.fromAsset('../backend/lambda/video-processor'),
       environment: {
         BUCKET_NAME: videoStorageBucket.bucketName,
         TABLE_NAME: crowdDataTable.tableName,
