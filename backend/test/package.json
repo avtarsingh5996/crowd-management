@@ -4,7 +4,8 @@
   "description": "Test script for sending test video frames to Lambda",
   "main": "send-test-video.js",
   "scripts": {
-    "start": "node send-test-video.js"
+    "start": "node send-test-video.js",
+    "build": "echo 'No build step required for test script'"
   },
   "dependencies": {
     "aws-sdk": "^2.1499.0",
