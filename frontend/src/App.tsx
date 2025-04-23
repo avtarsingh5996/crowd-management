@@ -8,8 +8,13 @@ import {
   Paper,
   Box,
   ThemeProvider,
-  createTheme
-} from '@material-ui/core';
+  createTheme,
+  Card,
+  CardContent,
+  CardHeader,
+  Divider,
+  CircularProgress
+} from '@mui/material';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend } from 'recharts';
 import { API } from 'aws-amplify';
 
