@@ -62,20 +62,7 @@ export class CrowdManagementStack extends cdk.Stack {
     const videoProcessor = new lambda.Function(this, 'VideoProcessor', {
       runtime: lambda.Runtime.NODEJS_18_X,
       handler: 'dist/index.handler',
-      code: lambda.Code.fromAsset('../backend/lambda/video-processor', {
-        bundling: {
-          command: [
-            'bash', '-c', [
-              'npm install',
-              'npm run build',
-              'cp -r dist/* /asset-output/',
-              'cp package.json /asset-output/',
-              'cp package-lock.json /asset-output/'
-            ].join(' && ')
-          ],
-          image: lambda.Runtime.NODEJS_18_X.bundlingImage,
-        }
-      }),
+      code: lambda.Code.fromAsset('../backend/lambda/video-processor/dist'),
       timeout: cdk.Duration.seconds(300),
       environment: {
         BUCKET_NAME: videoStorageBucket.bucketName,
