@@ -34,11 +34,11 @@ export class CrowdManagementStack extends cdk.Stack {
     });
 
     // Create Timestream database and table for time-series data
-    const timestreamDb = new timestream.CfnDatabase(this, 'TimestreamDb', {
+    const timestreamDb = new timestream.CfnDatabase(this, 'CrowdMetricsDatabase', {
       databaseName: 'crowd_metrics',
     });
 
-    const timestreamTable = new timestream.CfnTable(this, 'TimestreamTable', {
+    const timestreamTable = new timestream.CfnTable(this, 'CrowdMetricsTable', {
       databaseName: timestreamDb.databaseName!,
       tableName: 'crowd_metrics',
       retentionProperties: {
