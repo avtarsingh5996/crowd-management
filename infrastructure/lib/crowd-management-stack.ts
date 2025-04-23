@@ -20,6 +20,9 @@ export class CrowdManagementStack extends cdk.Stack {
       mediaType: 'video/h264',
     });
 
+    // Ensure the stream name is defined
+    const streamName = videoStream.name || 'crowd-video-stream';
+
     // Create S3 bucket for video storage
     const videoStorageBucket = new s3.Bucket(this, 'VideoStorageBucket', {
       bucketName: 'crowd-video-storage',
@@ -70,7 +73,7 @@ export class CrowdManagementStack extends cdk.Stack {
         TABLE_NAME: crowdDataTable.tableName,
         TIMESTREAM_DB: timestreamDb.databaseName!,
         TIMESTREAM_TABLE: timestreamTable.tableName!,
-        VIDEO_STREAM_NAME: videoStream.name,
+        VIDEO_STREAM_NAME: streamName,
       },
       timeout: cdk.Duration.minutes(5),
     });
@@ -194,7 +197,7 @@ export class CrowdManagementStack extends cdk.Stack {
 
     // Output important values
     new cdk.CfnOutput(this, 'VideoStreamName', {
-      value: videoStream.name,
+      value: streamName,
     });
 
     new cdk.CfnOutput(this, 'ApiEndpoint', {
