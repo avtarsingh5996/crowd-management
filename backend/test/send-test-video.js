@@ -5,10 +5,7 @@ const sharp = require('sharp');
 
 // Configure AWS
 AWS.config.update({ region: 'us-east-1' });
-const kinesis = new AWS.Kinesis();
 const lambda = new AWS.Lambda();
-
-const streamName = 'crowd-video-stream';
 
 // Function to compress image using Sharp
 async function compressImage(inputPath) {

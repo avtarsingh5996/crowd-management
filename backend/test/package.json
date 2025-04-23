@@ -1,14 +1,13 @@
 {
   "name": "video-streaming-test",
   "version": "1.0.0",
-  "description": "Test script for streaming video to Kinesis Video Stream",
-  "main": "stream-video.js",
+  "description": "Test script for sending test video frames to Lambda",
+  "main": "send-test-video.js",
   "scripts": {
-    "start": "node stream-video.js"
+    "start": "node send-test-video.js"
   },
   "dependencies": {
-    "@aws-sdk/client-kinesis-video": "^3.425.0",
-    "@aws-sdk/client-kinesis-video-archived-media": "^3.425.0",
-    "@aws-sdk/client-kinesis-video-media": "^3.425.0"
+    "aws-sdk": "^2.1499.0",
+    "sharp": "^0.32.6"
   }
 } 
