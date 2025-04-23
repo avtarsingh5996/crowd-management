@@ -82,11 +82,24 @@ export class CrowdManagementStack extends cdk.Stack {
         actions: [
           'timestream:WriteRecords',
           'timestream:DescribeEndpoints',
-          'timestream:Select'
+          'timestream:Select',
+          'timestream:DescribeDatabase',
+          'timestream:DescribeTable'
         ],
         resources: [
+          `arn:aws:timestream:${this.region}:${this.account}:database/${timestreamDb.databaseName}`,
           `arn:aws:timestream:${this.region}:${this.account}:database/${timestreamDb.databaseName}/table/${timestreamTable.tableName}`
         ],
+      })
+    );
+
+    // Add Timestream service permissions
+    videoProcessor.addToRolePolicy(
+      new iam.PolicyStatement({
+        actions: [
+          'timestream:DescribeEndpoints'
+        ],
+        resources: ['*']
       })
     );
 
