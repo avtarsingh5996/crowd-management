@@ -7,7 +7,6 @@ import { KinesisVideoMediaClient, GetMediaCommand } from '@aws-sdk/client-kinesi
 import { DynamoDBDocumentClient, PutCommand } from '@aws-sdk/lib-dynamodb';
 import { Stream } from 'stream';
 import { APIGatewayProxyEvent, APIGatewayProxyResult } from 'aws-lambda';
-import { KinesisStreamEvent } from 'aws-lambda/trigger/kinesis';
 
 const dynamoDB = DynamoDBDocumentClient.from(new DynamoDBClient({}));
 const s3 = new S3Client({});
@@ -37,6 +36,17 @@ interface RekognitionLabel {
 
 interface RekognitionResponse {
   Labels?: RekognitionLabel[];
+}
+
+interface KinesisRecord {
+  kinesis: {
+    data: string;
+    approximateArrivalTimestamp: number;
+  };
+}
+
+interface KinesisEvent {
+  Records: KinesisRecord[];
 }
 
 async function processFrame(frame: VideoFrame): Promise<{ peopleCount: number }> {
@@ -150,7 +160,7 @@ async function handleApiGatewayRequest(event: APIGatewayProxyEvent): Promise<API
 }
 
 // Handle Kinesis Data Stream events
-async function handleKinesisEvent(event: KinesisStreamEvent): Promise<void> {
+async function handleKinesisEvent(event: KinesisEvent): Promise<void> {
   for (const record of event.Records) {
     try {
       const frameData = Buffer.from(record.kinesis.data, 'base64');
@@ -227,7 +237,7 @@ async function handleVideoStream(): Promise<void> {
   }
 }
 
-export const handler = async (event: APIGatewayProxyEvent | KinesisStreamEvent | any): Promise<APIGatewayProxyResult | void> => {
+export const handler = async (event: APIGatewayProxyEvent | KinesisEvent | any): Promise<APIGatewayProxyResult | void> => {
   // Check if this is an API Gateway request
   if (event.httpMethod) {
     return handleApiGatewayRequest(event as APIGatewayProxyEvent);
@@ -235,7 +245,7 @@ export const handler = async (event: APIGatewayProxyEvent | KinesisStreamEvent |
   
   // Check if this is a Kinesis event
   if (event.Records && event.Records[0]?.kinesis) {
-    return handleKinesisEvent(event as KinesisStreamEvent);
+    return handleKinesisEvent(event as KinesisEvent);
   }
   
   // Otherwise, handle as a video stream
