@@ -1,13 +1,14 @@
-import { DynamoDB } from 'aws-sdk';
-import { S3 } from 'aws-sdk';
-import { Rekognition } from 'aws-sdk';
-import { TimestreamWrite } from 'aws-sdk';
+import { DynamoDBClient, PutItemCommand } from '@aws-sdk/client-dynamodb';
+import { S3Client, PutObjectCommand } from '@aws-sdk/client-s3';
+import { RekognitionClient, DetectLabelsCommand } from '@aws-sdk/client-rekognition';
+import { TimestreamWriteClient, WriteRecordsCommand } from '@aws-sdk/client-timestream-write';
 import { APIGatewayProxyEvent, APIGatewayProxyResult } from 'aws-lambda';
+import { marshall } from '@aws-sdk/lib-dynamodb';
 
-const dynamoDB = new DynamoDB.DocumentClient();
-const s3 = new S3();
-const rekognition = new Rekognition();
-const timestream = new TimestreamWrite();
+const dynamoDB = new DynamoDBClient({});
+const s3 = new S3Client({});
+const rekognition = new RekognitionClient({});
+const timestream = new TimestreamWriteClient({});
 
 const BUCKET_NAME = process.env.BUCKET_NAME!;
 const TABLE_NAME = process.env.TABLE_NAME!;
@@ -39,23 +40,21 @@ export const handler = async (event: APIGatewayProxyEvent): Promise<APIGatewayPr
     const videoFrame: VideoFrame = JSON.parse(event.body);
     
     // Save frame to S3
-    await s3.putObject({
+    await s3.send(new PutObjectCommand({
       Bucket: BUCKET_NAME,
       Key: `${videoFrame.cameraId}/${videoFrame.timestamp}.jpg`,
       Body: Buffer.from(videoFrame.frameData, 'base64'),
-    }).promise();
+    }));
 
     // Use Rekognition to detect people
-    const rekognitionParams = {
+    const rekognitionResult = await rekognition.send(new DetectLabelsCommand({
       Image: {
         S3Object: {
           Bucket: BUCKET_NAME,
           Name: `${videoFrame.cameraId}/${videoFrame.timestamp}.jpg`,
         },
       },
-    };
-
-    const rekognitionResult = await rekognition.detectLabels(rekognitionParams).promise() as RekognitionResponse;
+    })) as RekognitionResponse;
     
     // Count people in the frame
     const peopleCount = rekognitionResult.Labels?.filter(label => 
@@ -63,9 +62,9 @@ export const handler = async (event: APIGatewayProxyEvent): Promise<APIGatewayPr
     ).reduce((sum, label) => sum + (label.Instances?.length || 0), 0) || 0;
 
     // Store in DynamoDB
-    await dynamoDB.put({
+    await dynamoDB.send(new PutItemCommand({
       TableName: TABLE_NAME,
-      Item: {
+      Item: marshall({
         cameraId: videoFrame.cameraId,
         timestamp: videoFrame.timestamp,
         peopleCount,
@@ -74,12 +73,12 @@ export const handler = async (event: APIGatewayProxyEvent): Promise<APIGatewayPr
             label.Name?.toLowerCase() === 'person'
           )?.Confidence || 0,
         },
-      },
-    }).promise();
+      }),
+    }));
 
     // Store in Timestream for time-series analysis
     try {
-      await timestream.writeRecords({
+      await timestream.send(new WriteRecordsCommand({
         DatabaseName: TIMESTREAM_DB,
         TableName: TIMESTREAM_TABLE,
         Records: [
@@ -98,7 +97,7 @@ export const handler = async (event: APIGatewayProxyEvent): Promise<APIGatewayPr
             TimeUnit: 'MILLISECONDS',
           },
         ],
-      }).promise();
+      }));
     } catch (error) {
       console.error('Error writing to Timestream:', error);
       // Continue execution even if Timestream write fails
