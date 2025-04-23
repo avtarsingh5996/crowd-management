@@ -5,7 +5,7 @@ const fs = require('fs');
 const path = require('path');
 
 const STREAM_NAME = 'crowd-video-stream';
-const REGION = 'us-east-1';
+const REGION = 'ap-south-1';
 
 // Initialize AWS clients
 const kinesisVideo = new KinesisVideoClient({ region: REGION });
@@ -50,23 +50,8 @@ async function streamVideo(videoPath) {
       region: REGION,
     });
 
-    // Use ffmpeg to stream the video with proper parameters
-    const ffmpegCommand = `ffmpeg -i ${videoPath} \
-      -c:v libx264 \
-      -preset veryfast \
-      -tune zerolatency \
-      -profile:v baseline \
-      -level 3.0 \
-      -pix_fmt yuv420p \
-      -f mp4 \
-      -movflags frag_keyframe+empty_moov \
-      -g 30 \
-      -b:v 1000k \
-      -maxrate 1000k \
-      -bufsize 2000k \
-      -an \
-      -f mp4 \
-      ${endpoint}`;
+    // Use ffmpeg to stream the video with basic parameters
+    const ffmpegCommand = `ffmpeg -i ${videoPath} -c:v libx264 -f mp4 -an ${endpoint}`;
     
     console.log('Running ffmpeg command:', ffmpegCommand);
     
