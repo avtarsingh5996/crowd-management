@@ -1,8 +1,8 @@
 {
 	"name": "crowd-management-infrastructure",
-	"version": "1.0.0",
+	"version": "0.1.0",
 	"bin": {
-		"crowd-management": "bin/crowd-management.js"
+		"infrastructure": "bin/infrastructure.js"
 	},
 	"scripts": {
 		"build": "tsc",
@@ -11,16 +11,16 @@
 		"cdk": "cdk"
 	},
 	"devDependencies": {
-		"@types/jest": "^27.0.0",
-		"@types/node": "10.17.27",
-		"jest": "^27.0.0",
-		"ts-jest": "^27.0.0",
-		"aws-cdk": "^2.0.0",
-		"ts-node": "^9.0.0",
-		"typescript": "~4.0.0"
+		"@types/jest": "^29.5.0",
+		"@types/node": "20.0.0",
+		"jest": "^29.5.0",
+		"ts-jest": "^29.0.0",
+		"aws-cdk": "2.0.0",
+		"ts-node": "^10.9.0",
+		"typescript": "~5.0.0"
 	},
 	"dependencies": {
-		"aws-cdk-lib": "^2.0.0",
+		"aws-cdk-lib": "2.0.0",
 		"constructs": "^10.0.0",
 		"source-map-support": "^0.5.21"
 	},
