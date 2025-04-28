@@ -83,12 +83,14 @@ export class CrowdManagementStack extends cdk.Stack {
         DATA_STREAM_NAME: dataStream.streamName,
       },
       timeout: cdk.Duration.minutes(5),
+      memorySize: 1024,
     });
 
     // Grant necessary permissions
     videoStorageBucket.grantReadWrite(videoProcessor);
     crowdDataTable.grantReadWriteData(videoProcessor);
     dataStream.grantRead(videoProcessor);
+    dataStream.grantWrite(videoProcessor);
     
     // Add specific Timestream permissions
     videoProcessor.addToRolePolicy(
@@ -133,12 +135,17 @@ export class CrowdManagementStack extends cdk.Stack {
       resources: [videoStream.attrArn],
     }));
 
-    // Add Kinesis Data Stream trigger
+    // Add Kinesis Data Stream trigger with specific configuration
     const streamTrigger = new lambda.EventSourceMapping(this, 'StreamTrigger', {
       target: videoProcessor,
       eventSourceArn: dataStream.streamArn,
       batchSize: 1,
       startingPosition: lambda.StartingPosition.LATEST,
+      enabled: true,
+      retryAttempts: 3,
+      bisectBatchOnFunctionError: true,
+      maximumRecordAgeInSeconds: 60,
+      maximumRetryAttempts: 3,
     });
 
     // Create Lambda function for data retrieval
@@ -222,6 +229,10 @@ export class CrowdManagementStack extends cdk.Stack {
 
     new cdk.CfnOutput(this, 'TimestreamTable', {
       value: timestreamTable.tableName!,
+    });
+
+    new cdk.CfnOutput(this, 'LambdaFunctionName', {
+      value: videoProcessor.functionName,
     });
   }
 } 
