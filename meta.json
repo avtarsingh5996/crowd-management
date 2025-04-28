@@ -74,7 +74,7 @@
           "refId": "A",
           "scenarioId": "csv_content",
           "alias": "Last Polled Time",
-          "csvContent": "Timestamp\n2025-04-28T13:45:00Z"
+          "csvContent": "Timestamp\n2025-04-28T14:00:00Z"
         }
       ],
       "title": "Last Polled Time",
@@ -87,13 +87,13 @@
       }
     },
     {
-      "gridPos": { "h": 6, "w": 6, "x": 12, "y": 0 },
+      "gridPos": { "h": 6, "w": 12, "x": 12, "y": 0 },
       "id": 3,
       "options": {
         "colorMode": "value",
         "graphMode": "none",
-        "justifyMode": "center",
-        "orientation": "auto",
+        "justifyMode": "auto",
+        "orientation": "horizontal",
         "reduceOptions": { "calcs": ["lastNotNull"], "fields": "", "values": false },
         "showThresholdLabels": false,
         "showThresholdMarkers": true
@@ -107,90 +107,81 @@
           "alias": "Communicating Devices",
           "lines": 1,
           "points": 1,
-          "values": { "min": 44, "max": 46, "noise": 1 }
-        }
-      ],
-      "title": "Communicating Devices",
-      "type": "gauge",
-      "fieldConfig": {
-        "defaults": {
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              { "color": "red", "value": 0 },
-              { "color": "orange", "value": 40 },
-              { "color": "green", "value": 45 }
-            ]
-          },
-          "unit": "none",
-          "min": 0,
-          "max": 50
-        }
-      }
-    },
-    {
-      "gridPos": { "h": 6, "w": 6, "x": 18, "y": 0 },
-      "id": 4,
-      "options": {
-        "colorMode": "value",
-        "graphMode": "none",
-        "justifyMode": "center",
-        "orientation": "auto",
-        "reduceOptions": { "calcs": ["lastNotNull"], "fields": "", "values": false },
-        "showThresholdLabels": false,
-        "showThresholdMarkers": true
-      },
-      "pluginVersion": "10.2.0",
-      "targets": [
+          "values": { "min": 45, "max": 47, "noise": 1 }
+        },
         {
           "datasource": { "type": "testdata", "uid": "grafana-testdata-datasource" },
-          "refId": "A",
+          "refId": "B",
           "scenarioId": "random_walk",
           "alias": "Non-Communicating Devices",
           "lines": 1,
           "points": 1,
-          "values": { "min": 4, "max": 6, "noise": 1 }
+          "values": { "min": 3, "max": 5, "noise": 1 }
         }
       ],
-      "title": "Non-Communicating Devices",
-      "type": "gauge",
+      "title": "Device Communication Status",
+      "type": "bargauge",
       "fieldConfig": {
         "defaults": {
           "thresholds": {
             "mode": "absolute",
             "steps": [
               { "color": "green", "value": 0 },
-              { "color": "orange", "value": 5 },
-              { "color": "red", "value": 10 }
+              { "color": "orange", "value": 40 },
+              { "color": "red", "value": 45 }
             ]
           },
           "unit": "none",
           "min": 0,
-          "max": 20
-        }
+          "max": 50
+        },
+        "overrides": [
+          {
+            "matcher": { "id": "byName", "options": "Non-Communicating Devices" },
+            "properties": [
+              {
+                "id": "thresholds",
+                "value": {
+                  "mode": "absolute",
+                  "steps": [
+                    { "color": "green", "value": 0 },
+                    { "color": "orange", "value": 5 },
+                    { "color": "red", "value": 10 }
+                  ]
+                }
+              }
+            ]
+          }
+        ]
       }
     },
     {
       "gridPos": { "h": 8, "w": 24, "x": 0, "y": 6 },
-      "id": 5,
+      "id": 4,
       "options": {
-        "showHeader": true,
-        "sortBy": [{ "desc": false, "displayName": "DeviceID" }]
+        "showValue": true,
+        "mergeValues": true,
+        "alignValue": "left",
+        "legend": { "showLegend": true, "placement": "bottom" }
       },
+      "pluginVersion": "10.2.0",
       "targets": [
         {
           "datasource": { "type": "testdata", "uid": "grafana-testdata-datasource" },
           "refId": "A",
           "scenarioId": "csv_content",
-          "alias": "Device Details",
-          "csvContent": "DeviceID,IPAddress,Status,LastPolledTime,ResponseTime\nDEV001,192.168.1.101,Up,2025-04-28T13:45:00Z,50\nDEV002,192.168.1.102,Down,2025-04-28T13:44:00Z,0\nDEV003,192.168.1.103,Up,2025-04-28T13:45:00Z,45\nDEV004,192.168.1.104,Unknown,2025-04-28T13:43:00Z,0\nDEV005,192.168.1.105,Up,2025-04-28T13:45:00Z,60\nDEV006,192.168.1.106,Up,2025-04-28T13:45:00Z,55\nDEV007,192.168.1.107,Down,2025-04-28T13:44:00Z,0\nDEV008,192.168.1.108,Up,2025-04-28T13:45:00Z,48\nDEV009,192.168.1.109,Up,2025-04-28T13:45:00Z,52\nDEV010,192.168.1.110,Up,2025-04-28T13:45:00Z,47"
+          "alias": "Device Status",
+          "csvContent": "DeviceID,Status,Timestamp\nDEV001,Up,2025-04-28T14:00:00Z\nDEV002,Down,2025-04-28T13:55:00Z\nDEV003,Up,2025-04-28T14:00:00Z\nDEV004,Unknown,2025-04-28T13:50:00Z\nDEV005,Up,2025-04-28T14:00:00Z\nDEV006,Up,2025-04-28T14:00:00Z\nDEV007,Down,2025-04-28T13:55:00Z\nDEV008,Up,2025-04-28T14:00:00Z\nDEV009,Up,2025-04-28T14:00:00Z\nDEV010,Up,2025-04-28T14:00:00Z"
         }
       ],
-      "title": "SNMP Device Details",
-      "type": "table",
+      "title": "Device Status Timeline",
+      "type": "state-timeline",
       "fieldConfig": {
         "defaults": {
-          "custom": { "align": "auto", "cellOptions": { "type": "auto" }, "filterable": true },
+          "custom": {
+            "fillOpacity": 80,
+            "lineWidth": 1
+          },
           "thresholds": {
             "mode": "absolute",
             "steps": [
@@ -199,60 +190,147 @@
               { "color": "yellow", "value": 0, "label": "Unknown" }
             ]
           }
-        },
-        "overrides": [
-          {
-            "matcher": { "id": "byName", "options": "Status" },
-            "properties": [
-              { "id": "custom.displayMode", "value": "color-text" },
-              { "id": "thresholds" }
-            ]
-          },
-          {
-            "matcher": { "id": "byName", "options": "ResponseTime" },
-            "properties": [{ "id": "unit", "value": "ms" }]
-          },
-          {
-            "matcher": { "id": "byName", "options": "LastPolledTime" },
-            "properties": [{ "id": "unit", "value": "dateTimeAsIso" }]
-          }
-        ]
+        }
       }
     },
     {
-      "gridPos": { "h": 8, "w": 24, "x": 0, "y": 14 },
+      "gridPos": { "h": 6, "w": 24, "x": 0, "y": 14 },
+      "id": 5,
+      "options": {
+        "showValue": true,
+        "rowHeight": 0.9,
+        "colWidth": 0.9,
+        "mergeValues": true
+      },
+      "pluginVersion": "10.2.0",
+      "targets": [
+        {
+          "datasource": { "type": "testdata", "uid": "grafana-testdata-datasource" },
+          "refId": "A",
+          "scenarioId": "csv_content",
+          "alias": "Status History",
+          "csvContent": "DeviceID,Status,Timestamp\nDEV001,Up,2025-04-28T12:00:00Z\nDEV001,Up,2025-04-28T13:00:00Z\nDEV002,Up,2025-04-28T12:00:00Z\nDEV002,Down,2025-04-28T13:00:00Z\nDEV003,Up,2025-04-28T12:00:00Z\nDEV003,Up,2025-04-28T13:00:00Z\nDEV004,Unknown,2025-04-28T12:00:00Z\nDEV004,Unknown,2025-04-28T13:00:00Z"
+        }
+      ],
+      "title": "Key Devices Status History",
+      "type": "status-history",
+      "fieldConfig": {
+        "defaults": {
+          "custom": {
+            "fillOpacity": 80,
+            "lineWidth": 1
+          },
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              { "color": "green", "value": 0, "label": "Up" },
+              { "color": "red", "value": 0, "label": "Down" },
+              { "color": "yellow", "value": 0, "label": "Unknown" }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "gridPos": { "h": 8, "w": 24, "x": 0, "y": 20 },
       "id": 6,
       "options": {
+        "elements": [
+          {
+            "type": "circle",
+            "id": "dev001",
+            "config": {
+              "position": { "x": 100, "y": 100 },
+              "size": { "width": 20, "height": 20 },
+              "background": { "color": { "fixed": "green" } },
+              "label": { "value": "DEV001", "size": 12, "position": "bottom" }
+            }
+          },
+          {
+            "type": "circle",
+            "id": "dev002",
+            "config": {
+              "position": { "x": 150, "y": 100 },
+              "size": { "width": 20, "height": 20 },
+              "background": { "color": { "fixed": "red" } },
+              "label": { "value": "DEV002", "size": 12, "position": "bottom" }
+            }
+          },
+          {
+            "type": "circle",
+            "id": "dev003",
+            "config": {
+              "position": { "x": 200, "y": 100 },
+              "size": { "width": 20, "height": 20 },
+              "background": { "color": { "fixed": "green" } },
+              "label": { "value": "DEV003", "size": 12, "position": "bottom" }
+            }
+          },
+          {
+            "type": "line",
+            "id": "link1",
+            "config": {
+              "from": "dev001",
+              "to": "dev002",
+              "style": { "color": { "fixed": "white" }, "width": 2 }
+            }
+          },
+          {
+            "type": "line",
+            "id": "link2",
+            "config": {
+              "from": "dev002",
+              "to": "dev003",
+              "style": { "color": { "fixed": "white" }, "width": 2 }
+            }
+          }
+        ],
+        "connections": []
+      },
+      "pluginVersion": "10.2.0",
+      "targets": [
+        {
+          "datasource": { "type": "testdata", "uid": "grafana-testdata-datasource" },
+          "refId": "A",
+          "scenarioId": "csv_content",
+          "alias": "Device Status",
+          "csvContent": "DeviceID,Status\nDEV001,Up\nDEV002,Down\nDEV003,Up"
+        }
+      ],
+      "title": "Network Topology",
+      "type": "canvas",
+      "fieldConfig": {
+        "defaults": {
+          "custom": {}
+        }
+      }
+    },
+    {
+      "gridPos": { "h": 8, "w": 24, "x": 0, "y": 28 },
+      "id": 7,
+      "options": {
         "legend": { "calcs": [], "displayMode": "list", "placement": "bottom", "showLegend": true },
-        "tooltip": { "mode": "multi", "sort": "none" }
+        "tooltip": { "mode": "multi", "sort": "none" },
+        "stacking": { "group": "A", "mode": "normal" }
       },
       "targets": [
         {
           "datasource": { "type": "testdata", "uid": "grafana-testdata-datasource" },
           "refId": "A",
           "scenarioId": "random_walk",
-          "alias": "Connected Devices",
+          "alias": "Communicating Devices",
           "lines": 10,
           "points": 10,
-          "values": { "min": 49, "max": 51, "noise": 1 }
+          "values": { "min": 45, "max": 47, "noise": 1 }
         },
         {
           "datasource": { "type": "testdata", "uid": "grafana-testdata-datasource" },
           "refId": "B",
           "scenarioId": "random_walk",
-          "alias": "Communicating Devices",
-          "lines": 10,
-          "points": 10,
-          "values": { "min": 43, "max": 47, "noise": 1 }
-        },
-        {
-          "datasource": { "type": "testdata", "uid": "grafana-testdata-datasource" },
-          "refId": "C",
-          "scenarioId": "random_walk",
           "alias": "Non-Communicating Devices",
           "lines": 10,
           "points": 10,
-          "values": { "min": 3, "max": 7, "noise": 1 }
+          "values": { "min": 3, "max": 5, "noise": 1 }
         }
       ],
       "title": "Device Connectivity Trends",
@@ -265,17 +343,18 @@
             "axisColorMode": "text",
             "axisLabel": "",
             "axisPlacement": "auto",
-            "fillOpacity": 20,
+            "fillOpacity": 80,
             "gradientMode": "opacity",
-            "lineWidth": 2
+            "lineWidth": 1,
+            "stacking": { "mode": "normal" }
           },
           "unit": "none"
         }
       }
     },
     {
-      "gridPos": { "h": 6, "w": 12, "x": 0, "y": 22 },
-      "id": 7,
+      "gridPos": { "h": 6, "w": 12, "x": 0, "y": 36 },
+      "id": 8,
       "options": {
         "legend": { "displayMode": "table", "placement": "bottom", "showLegend": true },
         "pieType": "pie",
@@ -288,7 +367,7 @@
           "refId": "A",
           "scenarioId": "csv_content",
           "alias": "Device Status",
-          "csvContent": "Status,Count\nUp,45\nDown,4\nUnknown,1"
+          "csvContent": "Status,Count\nUp,47\nDown,2\nUnknown,1"
         }
       ],
       "title": "Device Status Distribution",
@@ -300,49 +379,10 @@
       }
     },
     {
-      "gridPos": { "h": 6, "w": 12, "x": 12, "y": 22 },
-      "id": 8,
-      "options": {
-        "calculate": false,
-        "cellGap": 1,
-        "color": {
-          "exponent": 0.5,
-          "fill": "dark-orange",
-          "mode": "scheme",
-          "reverse": false,
-          "scale": "exponential",
-          "scheme": "Oranges",
-          "steps": 64
-        },
-        "exemplars": { "color": "rgba(255,0,255,0.7)" },
-        "filterValues": { "le": 1e-9 },
-        "yAxis": { "decimals": 0 }
-      },
-      "pluginVersion": "10.2.0",
-      "targets": [
-        {
-          "datasource": { "type": "testdata", "uid": "grafana-testdata-datasource" },
-          "refId": "A",
-          "scenarioId": "random_walk",
-          "alias": "Response Time",
-          "lines": 10,
-          "points": 10,
-          "values": { "min": 0, "max": 100, "noise": 20 }
-        }
-      ],
-      "title": "Polling Response Time by Hour",
-      "type": "heatmap",
-      "fieldConfig": {
-        "defaults": {
-          "unit": "ms"
-        }
-      }
-    },
-    {
-      "gridPos": { "h": 6, "w": 24, "x": 0, "y": 28 },
+      "gridPos": { "h": 6, "w": 12, "x": 12, "y": 36 },
       "id": 9,
       "options": {
-        "content": "<div style='padding: 10px; background: #1f1f1f; border-radius: 5px; color: #ffffff;'>\n<h2>SNMP Devices Monitoring Dashboard (Dummy Data)</h2>\n<p>Monitor SNMP-enabled devices with live updates every 5 seconds. View total connected devices, latest polling time, device statuses, and counts of communicating/non-communicating devices. The table lists device details, and graphs show trends and distributions. Use the table filters to drill down into specific devices. Data is simulated using TestData DB.</p>\n</div>",
+        "content": "<div style='padding: 10px; background: #1f1f1f; border-radius: 5px; color: #ffffff;'>\n<h2>SNMP Devices Visualization Dashboard (Dummy Data)</h2>\n<p>Monitor SNMP devices with live updates every 5 seconds. View total connected devices, latest polling time, and device statuses via a timeline and topology view. Bar gauges and stacked charts show communicating/non-communicating devices. Use the status filter to focus on specific device states. Data is simulated using TestData DB.</p>\n</div>",
         "mode": "html"
       },
       "title": "Dashboard Overview",
@@ -378,8 +418,8 @@
     "time_options": ["5m", "15m", "1h", "6h", "12h", "24h", "2d", "7d", "30d"]
   },
   "timezone": "",
-  "title": "SNMP Devices Monitoring Dashboard",
-  "uid": "snmp-devices-stats",
+  "title": "SNMP Devices Visualization Dashboard",
+  "uid": "snmp-devices-visualization",
   "version": 1,
   "weekStart": ""
 }
