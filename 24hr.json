@@ -1,0 +1,508 @@
+{
+  "annotations": {
+    "list": [
+      {
+        "builtIn": 1,
+        "datasource": { "type": "grafana", "uid": "-- Grafana --" },
+        "enable": true,
+        "hide": false,
+        "iconColor": "rgba(0, 211, 255, 1)",
+        "name": "Annotations & Alerts",
+        "target": {
+          "limit": 10,
+          "matchAny": false,
+          "tags": ["energy", "maintenance"],
+          "type": "dashboard"
+        },
+        "type": "dashboard"
+      }
+    ]
+  },
+  "editable": true,
+  "fiscalYearStartMonth": 0,
+  "graphTooltip": 0,
+  "links": [],
+  "liveNow": true,
+  "panels": [
+    {
+      "gridPos": { "h": 4, "w": 4, "x": 0, "y": 0 },
+      "id": 1,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "none",
+        "justifyMode": "center",
+        "orientation": "auto",
+        "reduceOptions": { "calcs": ["lastNotNull"], "fields": "", "values": false },
+        "text": { "fontSize": 20, "valueSize": 28 }
+      },
+      "pluginVersion": "10.2.0",
+      "targets": [
+        {
+          "datasource": { "type": "testdata", "uid": "grafana-testdata-datasource" },
+          "refId": "A",
+          "scenarioId": "random_walk",
+          "alias": "EB/Main Runtime",
+          "lines": 1,
+          "points": 1,
+          "values": { "min": 8, "max": 8, "noise": 0 }
+        }
+      ],
+      "title": "EB/Main Runtime (h)",
+      "type": "stat",
+      "fieldConfig": { "defaults": { "color": { "mode": "fixed", "fixedColor": "blue" }, "unit": "h" } }
+    },
+    {
+      "gridPos": { "h": 4, "w": 4, "x": 4, "y": 0 },
+      "id": 2,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "none",
+        "justifyMode": "center",
+        "orientation": "auto",
+        "reduceOptions": { "calcs": ["lastNotNull"], "fields": "", "values": false },
+        "text": { "fontSize": 20, "valueSize": 28 }
+      },
+      "pluginVersion": "10.2.0",
+      "targets": [
+        {
+          "datasource": { "type": "testdata", "uid": "grafana-testdata-datasource" },
+          "refId": "A",
+          "scenarioId": "random_walk",
+          "alias": "Battery Bank Runtime",
+          "lines": 1,
+          "points": 1,
+          "values": { "min": 4, "max": 4, "noise": 0 }
+        }
+      ],
+      "title": "Battery Bank Runtime (h)",
+      "type": "stat",
+      "fieldConfig": { "defaults": { "color": { "mode": "fixed", "fixedColor": "green" }, "unit": "h" } }
+    },
+    {
+      "gridPos": { "h": 4, "w": 4, "x": 8, "y": 0 },
+      "id": 3,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "none",
+        "justifyMode": "center",
+        "orientation": "auto",
+        "reduceOptions": { "calcs": ["lastNotNull"], "fields": "", "values": false },
+        "text": { "fontSize": 20, "valueSize": 28 }
+      },
+      "pluginVersion": "10.2.0",
+      "targets": [
+        {
+          "datasource": { "type": "testdata", "uid": "grafana-testdata-datasource" },
+          "refId": "A",
+          "scenarioId": "random_walk",
+          "alias": "Solar Runtime",
+          "lines": 1,
+          "points": 1,
+          "values": { "min": 6, "max": 6, "noise": 0 }
+        }
+      ],
+      "title": "Solar Runtime (h)",
+      "type": "stat",
+      "fieldConfig": { "defaults": { "color": { "mode": "fixed", "fixedColor": "yellow" }, "unit": "h" } }
+    },
+    {
+      "gridPos": { "h": 4, "w": 4, "x": 12, "y": 0 },
+      "id": 4,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "none",
+        "justifyMode": "center",
+        "orientation": "auto",
+        "reduceOptions": { "calcs": ["lastNotNull"], "fields": "", "values": false },
+        "text": { "fontSize": 20, "valueSize": 28 }
+      },
+      "pluginVersion": "10.2.0",
+      "targets": [
+        {
+          "datasource": { "type": "testdata", "uid": "grafana-testdata-datasource" },
+          "refId": "A",
+          "scenarioId": "random_walk",
+          "alias": "Diesel Generator Runtime",
+          "lines": 1,
+          "points": 1,
+          "values": { "min": 2, "max": 2, "noise": 0 }
+        }
+      ],
+      "title": "Diesel Generator Runtime (h)",
+      "type": "stat",
+      "fieldConfig": { "defaults": { "color": { "mode": "fixed", "fixedColor": "red" }, "unit": "h" } }
+    },
+    {
+      "gridPos": { "h": 4, "w": 4, "x": 16, "y": 0 },
+      "id": 5,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "none",
+        "justifyMode": "center",
+        "orientation": "auto",
+        "reduceOptions": { "calcs": ["lastNotNull"], "fields": "", "values": false },
+        "text": { "fontSize": 20, "valueSize": 28 }
+      },
+      "pluginVersion": "10.2.0",
+      "targets": [
+        {
+          "datasource": { "type": "testdata", "uid": "grafana-testdata-datasource" },
+          "refId": "A",
+          "scenarioId": "random_walk",
+          "alias": "Solar + BB Runtime",
+          "lines": 1,
+          "points": 1,
+          "values": { "min": 2, "max": 2, "noise": 0 }
+        }
+      ],
+      "title": "Solar + BB Runtime (h)",
+      "type": "stat",
+      "fieldConfig": { "defaults": { "color": { "mode": "fixed", "fixedColor": "light-green" }, "unit": "h" } }
+    },
+    {
+      "gridPos": { "h": 4, "w": 4, "x": 20, "y": 0 },
+      "id": 6,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "none",
+        "justifyMode": "center",
+        "orientation": "auto",
+        "reduceOptions": { "calcs": ["lastNotNull"], "fields": "", "values": false },
+        "text": { "fontSize": 20, "valueSize": 28 }
+      },
+      "pluginVersion": "10.2.0",
+      "targets": [
+        {
+          "datasource": { "type": "testdata", "uid": "grafana-testdata-datasource" },
+          "refId": "A",
+          "scenarioId": "random_walk",
+          "alias": "Solar + EB Runtime",
+          "lines": 1,
+          "points": 1,
+          "values": { "min": 1, "max": 1, "noise": 0 }
+        }
+      ],
+      "title": "Solar + EB Runtime (h)",
+      "type": "stat",
+      "fieldConfig": { "defaults": { "color": { "mode": "fixed", "fixedColor": "light-blue" }, "unit": "h" } }
+    },
+    {
+      "gridPos": { "h": 4, "w": 4, "x": 0, "y": 4 },
+      "id": 7,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "none",
+        "justifyMode": "center",
+        "orientation": "auto",
+        "reduceOptions": { "calcs": ["lastNotNull"], "fields": "", "values": false },
+        "text": { "fontSize": 20, "valueSize": 28 }
+      },
+      "pluginVersion": "10.2.0",
+      "targets": [
+        {
+          "datasource": { "type": "testdata", "uid": "grafana-testdata-datasource" },
+          "refId": "A",
+          "scenarioId": "random_walk",
+          "alias": "Solar + DG Runtime",
+          "lines": 1,
+          "points": 1,
+          "values": { "min": 1, "max": 1, "noise": 0 }
+        }
+      ],
+      "title": "Solar + DG Runtime (h)",
+      "type": "stat",
+      "fieldConfig": { "defaults": { "color": { "mode": "fixed", "fixedColor": "orange" }, "unit": "h" } }
+    },
+    {
+      "gridPos": { "h": 4, "w": 4, "x": 4, "y": 4 },
+      "id": 8,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "none",
+        "justifyMode": "center",
+        "orientation": "auto",
+        "reduceOptions": { "calcs": ["lastNotNull"], "fields": "", "values": false },
+        "showThresholdLabels": false,
+        "showThresholdMarkers": true
+      },
+      "pluginVersion": "10.2.0",
+      "targets": [
+        {
+          "datasource": { "type": "testdata", "uid": "grafana-testdata-datasource" },
+          "refId": "A",
+          "scenarioId": "random_walk",
+          "alias": "Total Runtime",
+          "lines": 1,
+          "points": 1,
+          "values": { "min": 24, "max": 24, "noise": 0 }
+        }
+      ],
+      "title": "Total Runtime (h)",
+      "type": "gauge",
+      "fieldConfig": {
+        "defaults": {
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              { "color": "red", "value": 0 },
+              { "color": "orange", "value": 20 },
+              { "color": "green", "value": 24 }
+            ]
+          },
+          "unit": "h",
+          "min": 0,
+          "max": 24
+        }
+      }
+    },
+    {
+      "gridPos": { "h": 8, "w": 24, "x": 0, "y": 8 },
+      "id": 9,
+      "options": {
+        "legend": { "calcs": [], "displayMode": "list", "placement": "bottom", "showLegend": true },
+        "tooltip": { "mode": "multi", "sort": "none" }
+      },
+      "targets": [
+        {
+          "datasource": { "type": "testdata", "uid": "grafana-testdata-datasource" },
+          "refId": "A",
+          "scenarioId": "random_walk",
+          "alias": "EB/Main",
+          "lines": 10,
+          "points": 10,
+          "values": { "min": 7, "max": 9, "noise": 1 }
+        },
+        {
+          "datasource": { "type": "testdata", "uid": "grafana-testdata-datasource" },
+          "refId": "B",
+          "scenarioId": "random_walk",
+          "alias": "Battery Bank",
+          "lines": 10,
+          "points": 10,
+          "values": { "min": 3, "max": 5, "noise": 1 }
+        },
+        {
+          "datasource": { "type": "testdata", "uid": "grafana-testdata-datasource" },
+          "refId": "C",
+          "scenarioId": "random_walk",
+          "alias": "Solar",
+          "lines": 10,
+          "points": 10,
+          "values": { "min": 5, "max": 7, "noise": 1 }
+        },
+        {
+          "datasource": { "type": "testdata", "uid": "grafana-testdata-datasource" },
+          "refId": "D",
+          "scenarioId": "random_walk",
+          "alias": "Diesel Generator",
+          "lines": 10,
+          "points": 10,
+          "values": { "min": 1, "max": 3, "noise": 0.5 }
+        },
+        {
+          "datasource": { "type": "testdata", "uid": "grafana-testdata-datasource" },
+          "refId": "E",
+          "scenarioId": "random_walk",
+          "alias": "Solar + BB",
+          "lines": 10,
+          "points": 10,
+          "values": { "min": 1, "max": 3, "noise": 0.5 }
+        },
+        {
+          "datasource": { "type": "testdata", "uid": "grafana-testdata-datasource" },
+          "refId": "F",
+          "scenarioId": "random_walk",
+          "alias": "Solar + EB",
+          "lines": 10,
+          "points": 10,
+          "values": { "min": 0.5, "max": 1.5, "noise": 0.3 }
+        },
+        {
+          "datasource": { "type": "testdata", "uid": "grafana-testdata-datasource" },
+          "refId": "G",
+          "scenarioId": "random_walk",
+          "alias": "Solar + DG",
+          "lines": 10,
+          "points": 10,
+          "values": { "min": 0.5, "max": 1.5, "noise": 0.3 }
+        }
+      ],
+      "title": "Energy Source Runtime Trends (h)",
+      "type": "timeseries",
+      "fieldConfig": {
+        "defaults": {
+          "color": { "mode": "palette-classic" },
+          "custom": {
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "fillOpacity": 20,
+            "gradientMode": "opacity",
+            "lineWidth": 2
+          },
+          "unit": "h"
+        }
+      }
+    },
+    {
+      "gridPos": { "h": 8, "w": 24, "x": 0, "y": 16 },
+      "id": 10,
+      "options": {
+        "legend": { "calcs": [], "displayMode": "list", "placement": "bottom", "showLegend": true },
+        "tooltip": { "mode": "multi", "sort": "none" },
+        "stacking": { "group": "A", "mode": "normal" }
+      },
+      "targets": [
+        {
+          "datasource": { "type": "testdata", "uid": "grafana-testdata-datasource" },
+          "refId": "A",
+          "scenarioId": "random_walk",
+          "alias": "EB/Main Load",
+          "lines": 10,
+          "points": 10,
+          "values": { "min": 200, "max": 300, "noise": 50 }
+        },
+        {
+          "datasource": { "type": "testdata", "uid": "grafana-testdata-datasource" },
+          "refId": "B",
+          "scenarioId": "random_walk",
+          "alias": "Battery Bank Load",
+          "lines": 10,
+          "points": 10,
+          "values": { "min": 100, "max": 150, "noise": 30 }
+        },
+        {
+          "datasource": { "type": "testdata", "uid": "grafana-testdata-datasource" },
+          "refId": "C",
+          "scenarioId": "random_walk",
+          "alias": "Solar Load",
+          "lines": 10,
+          "points": 10,
+          "values": { "min": 150, "max": 200, "noise": 40 }
+        },
+        {
+          "datasource": { "type": "testdata", "uid": "grafana-testdata-datasource" },
+          "refId": "D",
+          "scenarioId": "random_walk",
+          "alias": "Diesel Generator Load",
+          "lines": 10,
+          "points": 10,
+          "values": { "min": 50, "max": 100, "noise": 20 }
+        },
+        {
+          "datasource": { "type": "testdata", "uid": "grafana-testdata-datasource" },
+          "refId": "E",
+          "scenarioId": "random_walk",
+          "alias": "Solar + BB Load",
+          "lines": 10,
+          "points": 10,
+          "values": { "min": 50, "max": 100, "noise": 20 }
+        },
+        {
+          "datasource": { "type": "testdata", "uid": "grafana-testdata-datasource" },
+          "refId": "F",
+          "scenarioId": "random_walk",
+          "alias": "Solar + EB Load",
+          "lines": 10,
+          "points": 10,
+          "values": { "min": 25, "max": 50, "noise": 10 }
+        },
+        {
+          "datasource": { "type": "testdata", "uid": "grafana-testdata-datasource" },
+          "refId": "G",
+          "scenarioId": "random_walk",
+          "alias": "Solar + DG Load",
+          "lines": 10,
+          "points": 10,
+          "values": { "min": 25, "max": 50, "noise": 10 }
+        }
+      ],
+      "title": "Energy Load Distribution (kWh)",
+      "type": "timeseries",
+      "fieldConfig": {
+        "defaults": {
+          "color": { "mode": "palette-classic" },
+          "custom": {
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "fillOpacity": 80,
+            "gradientMode": "opacity",
+            "lineWidth": 1,
+            "stacking": { "mode": "normal" }
+          },
+          "unit": "kWh"
+        }
+      }
+    },
+    {
+      "gridPos": { "h": 8, "w": 24, "x": 0, "y": 24 },
+      "id": 11,
+      "options": {
+        "showHeader": true,
+        "sortBy": [{ "desc": false, "displayName": "Hour" }]
+      },
+      "targets": [
+        {
+          "datasource": { "type": "testdata", "uid": "grafana-testdata-datasource" },
+          "refId": "A",
+          "scenarioId": "csv_content",
+          "alias": "Hourly Runtime",
+          "csvContent": "Hour,EB_Main,Battery_Bank,Solar,Diesel_Generator,Solar_BB,Solar_EB,Solar_DG\n00:00,0.4,0.2,0.2,0.1,0.1,0.0,0.0\n01:00,0.4,0.**
+        }
+      ],
+      "title": "Hourly Runtime Breakdown (h)",
+      "type": "table",
+      "fieldConfig": {
+        "defaults": {
+          "custom": { "align": "auto", "cellOptions": { "type": "auto" }, "filterable": true },
+          "unit": "h"
+        }
+      }
+    },
+    {
+      "gridPos": { "h": 6, "w": 24, "x": 0, "y": 32 },
+      "id": 12,
+      "options": {
+        "content": "<div style='padding: 10px; background: #1f1f1f; border-radius: 5px; color: #ffffff;'>\n<h2>Energy Sources Runtime Dashboard (Dummy Data)</h2>\n<p>Monitor 24-hour runtime for EB/Main, Battery Bank, Solar, Diesel Generator, and hybrid sources. Total runtime sums to 24h daily. The stacked graph shows energy load distribution (kWh) across sources. Data is simulated using TestData DB.</p>\n</div>",
+        "mode": "html"
+      },
+      "title": "Dashboard Overview",
+      "type": "text"
+    }
+  ],
+  "schemaVersion": 38,
+  "tags": ["energy", "runtime", "dummy-data"],
+  "templating": {
+    "list": [
+      {
+        "current": { "selected": false, "text": "24h", "value": "24h" },
+        "hide": 0,
+        "includeAll": false,
+        "multi": false,
+        "name": "time_range",
+        "options": [
+          { "selected": true, "text": "24h", "value": "24h" },
+          { "selected": false, "text": "48h", "value": "48h" },
+          { "selected": false, "text": "72h", "value": "72h" }
+        ],
+        "query": "24h,48h,72h",
+        "queryValue": "",
+        "skipUrlSync": false,
+        "type": "custom"
+      }
+    ]
+  },
+  "time": { "from": "now-24h", "to": "now" },
+  "timepicker": {
+    "refresh_intervals": ["5s", "10s", "30s", "1m", "5m", "15m", "30m", "1h"],
+    "time_options": ["5m", "15m", "1h", "6h", "12h", "24h", "2d", "7d", "30d"]
+  },
+  "timezone": "",
+  "title": "Energy Sources Runtime Dashboard",
+  "uid": "energy-runtime-stats",
+  "version": 1,
+  "weekStart": ""
+}
