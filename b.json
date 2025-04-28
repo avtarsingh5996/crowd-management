@@ -1,0 +1,747 @@
+{
+  "annotations": {
+    "list": [
+      {
+        "builtIn": 1,
+        "datasource": { "type": "grafana", "uid": "-- Grafana --" },
+        "enable": true,
+        "hide": false,
+        "iconColor": "rgba(0, 211, 255, 1)",
+        "name": "Annotations & Alerts",
+        "target": {
+          "limit": 10,
+          "matchAny": false,
+          "tags": ["maintenance", "camera_failure", "crowd_alert"],
+          "type": "dashboard"
+        },
+        "type": "dashboard"
+      }
+    ]
+  },
+  "editable": true,
+  "fiscalYearStartMonth": 0,
+  "graphTooltip": 0,
+  "links": [],
+  "liveNow": true,
+  "panels": [
+    // Overview Stats (Cameras and Equipment)
+    {
+      "gridPos": { "h": 4, "w": 6, "x": 0, "y": 0 },
+      "id": 1,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "none",
+        "justifyMode": "center",
+        "orientation": "auto",
+        "reduceOptions": { "calcs": ["lastNotNull"], "fields": "", "values": false },
+        "text": { "fontSize": 28, "valueSize": 40 }
+      },
+      "pluginVersion": "10.2.0",
+      "targets": [
+        {
+          "datasource": { "type": "testdata", "uid": "grafana-testdata-datasource" },
+          "refId": "A",
+          "scenarioId": "random_walk",
+          "alias": "Total Cameras",
+          "lines": 1,
+          "points": 1,
+          "values": { "min": 20, "max": 20, "noise": 0 }
+        }
+      ],
+      "title": "Total Cameras",
+      "type": "stat",
+      "fieldConfig": { "defaults": { "color": { "mode": "fixed", "fixedColor": "blue" } } }
+    },
+    {
+      "gridPos": { "h": 4, "w": 6, "x": 6, "y": 0 },
+      "id": 2,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "none",
+        "justifyMode": "center",
+        "orientation": "auto",
+        "reduceOptions": { "calcs": ["lastNotNull"], "fields": "", "values": false },
+        "text": { "fontSize": 28, "valueSize": 40 }
+      },
+      "pluginVersion": "10.2.0",
+      "targets": [
+        {
+          "datasource": { "type": "testdata", "uid": "grafana-testdata-datasource" },
+          "refId": "A",
+          "scenarioId": "random_walk",
+          "alias": "Active Feeds",
+          "lines": 1,
+          "points": 1,
+          "values": { "min": 18, "max": 18, "noise": 0 }
+        }
+      ],
+      "title": "Active Feeds",
+      "type": "stat",
+      "fieldConfig": { "defaults": { "color": { "mode": "fixed", "fixedColor": "green" } } }
+    },
+    {
+      "gridPos": { "h": 4, "w": 6, "x": 12, "y": 0 },
+      "id": 3,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "none",
+        "justifyMode": "center",
+        "orientation": "auto",
+        "reduceOptions": { "calcs": ["lastNotNull"], "fields": "", "values": false },
+        "text": { "fontSize": 28, "valueSize": 40 }
+      },
+      "pluginVersion": "10.2.0",
+      "targets": [
+        {
+          "datasource": { "type": "testdata", "uid": "grafana-testdata-datasource" },
+          "refId": "A",
+          "scenarioId": "random_walk",
+          "alias": "Total Equipment",
+          "lines": 1,
+          "points": 1,
+          "values": { "min": 30, "max": 30, "noise": 0 }
+        }
+      ],
+      "title": "Total Equipment",
+      "type": "stat",
+      "fieldConfig": { "defaults": { "color": { "mode": "fixed", "fixedColor": "purple" } } }
+    },
+    {
+      "gridPos": { "h": 4, "w": 6, "x": 18, "y": 0 },
+      "id": 4,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "none",
+        "justifyMode": "center",
+        "orientation": "auto",
+        "reduceOptions": { "calcs": ["lastNotNull"], "fields": "", "values": false },
+        "text": { "fontSize": 28, "valueSize": 40 }
+      },
+      "pluginVersion": "10.2.0",
+      "targets": [
+        {
+          "datasource": { "type": "testdata", "uid": "grafana-testdata-datasource" },
+          "refId": "A",
+          "scenarioId": "random_walk",
+          "alias": "Offline Cameras",
+          "lines": 1,
+          "points": 1,
+          "values": { "min": 2, "max": 2, "noise": 0 }
+        }
+      ],
+      "title": "Offline Cameras",
+      "type": "stat",
+      "fieldConfig": { "defaults": { "color": { "mode": "fixed", "fixedColor": "red" } } }
+    },
+    // Crowd Management Overview
+    {
+      "gridPos": { "h": 4, "w": 6, "x": 0, "y": 4 },
+      "id": 5,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "none",
+        "justifyMode": "center",
+        "orientation": "auto",
+        "reduceOptions": { "calcs": ["lastNotNull"], "fields": "", "values": false },
+        "text": { "fontSize": 28, "valueSize": 40 }
+      },
+      "pluginVersion": "10.2.0",
+      "targets": [
+        {
+          "datasource": { "type": "testdata", "uid": "grafana-testdata-datasource" },
+          "refId": "A",
+          "scenarioId": "random_walk",
+          "alias": "Total Attendees",
+          "lines": 1,
+          "points": 1,
+          "values": { "min": 750, "max": 750, "noise": 0 }
+        }
+      ],
+      "title": "Total Attendees",
+      "type": "stat",
+      "fieldConfig": { "defaults": { "color": { "mode": "fixed", "fixedColor": "yellow" } } }
+    },
+    {
+      "gridPos": { "h": 4, "w": 6, "x": 6, "y": 4 },
+      "id": 6,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "none",
+        "justifyMode": "center",
+        "orientation": "auto",
+        "reduceOptions": { "calcs": ["lastNotNull"], "fields": "", "values": false },
+        "text": { "fontSize": 28, "valueSize": 40 }
+      },
+      "pluginVersion": "10.2.0",
+      "targets": [
+        {
+          "datasource": { "type": "testdata", "uid": "grafana-testdata-datasource" },
+          "refId": "A",
+          "scenarioId": "random_walk",
+          "alias": "Entry Rate",
+          "lines": 1,
+          "points": 1,
+          "values": { "min": 10, "max": 15, "noise": 2 }
+        }
+      ],
+      "title": "Entry Rate (ppl/min)",
+      "type": "stat",
+      "fieldConfig": { "defaults": { "color": { "mode": "fixed", "fixedColor": "light-green" } } }
+    },
+    {
+      "gridPos": { "h": 4, "w": 6, "x": 12, "y": 4 },
+      "id": 7,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "none",
+        "justifyMode": "center",
+        "orientation": "auto",
+        "reduceOptions": { "calcs": ["lastNotNull"], "fields": "", "values": false },
+        "text": { "fontSize": 28, "valueSize": 40 }
+      },
+      "pluginVersion": "10.2.0",
+      "targets": [
+        {
+          "datasource": { "type": "testdata", "uid": "grafana-testdata-datasource" },
+          "refId": "A",
+          "scenarioId": "random_walk",
+          "alias": "Exit Rate",
+          "lines": 1,
+          "points": 1,
+          "values": { "min": 8, "max": 12, "noise": 2 }
+        }
+      ],
+      "title": "Exit Rate (ppl/min)",
+      "type": "stat",
+      "fieldConfig": { "defaults": { "color": { "mode": "fixed", "fixedColor": "light-red" } } }
+    },
+    {
+      "gridPos": { "h": 4, "w": 6, "x": 18, "y": 4 },
+      "id": 8,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "none",
+        "justifyMode": "center",
+        "orientation": "auto",
+        "reduceOptions": { "calcs": ["lastNotNull"], "fields": "", "values": false },
+        "showThresholdLabels": false,
+        "showThresholdMarkers": true
+      },
+      "pluginVersion": "10.2.0",
+      "targets": [
+        {
+          "datasource": { "type": "testdata", "uid": "grafana-testdata-datasource" },
+          "refId": "A",
+          "scenarioId": "random_walk",
+          "alias": "Crowd Density",
+          "lines": 1,
+          "points": 1,
+          "values": { "min": 60, "max": 80, "noise": 5 }
+        }
+      ],
+      "title": "Crowd Density (%)",
+      "type": "gauge",
+      "fieldConfig": {
+        "defaults": {
+          "thresholds": {
+            "mode": "percentage",
+            "steps": [
+              { "color": "green", "value": 0 },
+              { "color": "orange", "value": 70 },
+              { "color": "red", "value": 80 }
+            ]
+          },
+          "unit": "percent"
+        }
+      }
+    },
+    // Camera Feed Gauges (Success and Failure Rates)
+    {
+      "gridPos": { "h": 6, "w": 12, "x": 0, "y": 8 },
+      "id": 9,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "none",
+        "justifyMode": "center",
+        "orientation": "auto",
+        "reduceOptions": { "calcs": ["lastNotNull"], "fields": "", "values": false },
+        "showThresholdLabels": false,
+        "showThresholdMarkers": true
+      },
+      "pluginVersion": "10.2.0",
+      "targets": [
+        {
+          "datasource": { "type": "testdata", "uid": "grafana-testdata-datasource" },
+          "refId": "A",
+          "scenarioId": "random_walk",
+          "alias": "Feed Success Rate",
+          "lines": 1,
+          "points": 1,
+          "values": { "min": 85, "max": 95, "noise": 2 }
+        }
+      ],
+      "title": "Average Feed Success Rate (%)",
+      "type": "gauge",
+      "fieldConfig": {
+        "defaults": {
+          "thresholds": {
+            "mode": "percentage",
+            "steps": [
+              { "color": "red", "value": 0 },
+              { "color": "orange", "value": 80 },
+              { "color": "green", "value": 90 }
+            ]
+          },
+          "unit": "percent"
+        }
+      }
+    },
+    {
+      "gridPos": { "h": 6, "w": 12, "x": 12, "y": 8 },
+      "id": 10,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "none",
+        "justifyMode": "center",
+        "orientation": "auto",
+        "reduceOptions": { "calcs": ["lastNotNull"], "fields": "", "values": false },
+        "showThresholdLabels": false,
+        "showThresholdMarkers": true
+      },
+      "pluginVersion": "10.2.0",
+      "targets": [
+        {
+          "datasource": { "type": "testdata", "uid": "grafana-testdata-datasource" },
+          "refId": "A",
+          "scenarioId": "random_walk",
+          "alias": "Feed Failure Rate",
+          "lines": 1,
+          "points": 1,
+          "values": { "min": 5, "max": 15, "noise": 2 }
+        }
+      ],
+      "title": "Average Feed Failure Rate (%)",
+      "type": "gauge",
+      "fieldConfig": {
+        "defaults": {
+          "thresholds": {
+            "mode": "percentage",
+            "steps": [
+              { "color": "green", "value": 0 },
+              { "color": "orange", "value": 10 },
+              { "color": "red", "value": 20 }
+            ]
+          },
+          "unit": "percent"
+        }
+      }
+    },
+    // Camera Feed Time-Series
+    {
+      "gridPos": { "h": 6, "w": 24, "x": 0, "y": 14 },
+      "id": 11,
+      "options": {
+        "legend": { "calcs": [], "displayMode": "list", "placement": "bottom", "showLegend": true },
+        "tooltip": { "mode": "multi", "sort": "none" }
+      },
+      "targets": [
+        {
+          "datasource": { "type": "testdata", "uid": "grafana-testdata-datasource" },
+          "refId": "A",
+          "scenarioId": "random_walk",
+          "alias": "Feed Success Rate",
+          "lines": 10,
+          "points": 10,
+          "values": { "min": 80, "max": 100, "noise": 5 }
+        },
+        {
+          "datasource": { "type": "testdata", "uid": "grafana-testdata-datasource" },
+          "refId": "B",
+          "scenarioId": "random_walk",
+          "alias": "Feed Failure Rate",
+          "lines": 10,
+          "points": 10,
+          "values": { "min": 0, "max": 20, "noise": 5 }
+        }
+      ],
+      "title": "Camera Feed Success/Failure Over Time",
+      "type": "timeseries",
+      "fieldConfig": {
+        "defaults": {
+          "color": { "mode": "palette-classic" },
+          "custom": {
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "fillOpacity": 20,
+            "gradientMode": "opacity",
+            "lineWidth": 2
+          }
+        }
+      }
+    },
+    // Camera Status Pie Chart
+    {
+      "gridPos": { "h": 6, "w": 12, "x": 0, "y": 20 },
+      "id": 12,
+      "options": {
+        "legend": { "displayMode": "table", "placement": "bottom", "showLegend": true },
+        "pieType": "pie",
+        "reduceOptions": { "calcs": ["lastNotNull"], "fields": "", "values": false }
+      },
+      "pluginVersion": "10.2.0",
+      "targets": [
+        {
+          "datasource": { "type": "testdata", "uid": "grafana-testdata-datasource" },
+          "refId": "A",
+          "scenarioId": "csv_content",
+          "alias": "Camera Status",
+          "csvContent": "Status,Count\nOnline,16\nOffline,2\nMaintenance,2"
+        }
+      ],
+      "title": "Camera Status Distribution",
+      "type": "piechart",
+      "fieldConfig": {
+        "defaults": {
+          "color": { "mode": "palette-classic" }
+        }
+      }
+    },
+    // Crowd Density Heatmap
+    {
+      "gridPos": { "h": 6, "w": 12, "x": 12, "y": 20 },
+      "id": 13,
+      "options": {
+        "calculate": false,
+        "cellGap": 1,
+        "color": {
+          "exponent": 0.5,
+          "fill": "dark-orange",
+          "mode": "scheme",
+          "reverse": false,
+          "scale": "exponential",
+          "scheme": "Oranges",
+          "steps": 64
+        },
+        "exemplars": { "color": "rgba(255,0,255,0.7)" },
+        "filterValues": { "le": 1e-9 },
+        "yAxis": { "decimals": 0 }
+      },
+      "pluginVersion": "10.2.0",
+      "targets": [
+        {
+          "datasource": { "type": "testdata", "uid": "grafana-testdata-datasource" },
+          "refId": "A",
+          "scenarioId": "random_walk",
+          "alias": "Crowd Density",
+          "lines": 10,
+          "points": 10,
+          "values": { "min": 0, "max": 100, "noise": 10 }
+        }
+      ],
+      "title": "Crowd Density Heatmap by Zone",
+      "type": "heatmap"
+    },
+    // Per-Camera Stat Panels (Success Rate and Status)
+    // Camera 1 to 5 as an example (repeat for all 20 with adjusted gridPos and values)
+    {
+      "gridPos": { "h": 4, "w": 4, "x": 0, "y": 26 },
+      "id": 14,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "none",
+        "justifyMode": "center",
+        "orientation": "auto",
+        "reduceOptions": { "calcs": ["lastNotNull"], "fields": "", "values": false },
+        "text": { "fontSize": 20, "valueSize": 24 }
+      },
+      "pluginVersion": "10.2.0",
+      "targets": [
+        {
+          "datasource": { "type": "testdata", "uid": "grafana-testdata-datasource" },
+          "refId": "A",
+          "scenarioId": "random_walk",
+          "alias": "Camera 1 Success",
+          "lines": 1,
+          "points": 1,
+          "values": { "min": 90, "max": 95, "noise": 2 }
+        }
+      ],
+      "title": "Camera 1 Success (%)",
+      "type": "stat",
+      "fieldConfig": {
+        "defaults": {
+          "unit": "percent",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              { "color": "red", "value": 0 },
+              { "color": "orange", "value": 80 },
+              { "color": "green", "value": 90 }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "gridPos": { "h": 4, "w": 4, "x": 4, "y": 26 },
+      "id": 15,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "none",
+        "justifyMode": "center",
+        "orientation": "auto",
+        "reduceOptions": { "calcs": ["lastNotNull"], "fields": "", "values": false },
+        "text": { "fontSize": 20, "valueSize": 24 }
+      },
+      "pluginVersion": "10.2.0",
+      "targets": [
+        {
+          "datasource": { "type": "testdata", "uid": "grafana-testdata-datasource" },
+          "refId": "A",
+          "scenarioId": "csv_content",
+          "alias": "Camera 1 Status",
+          "csvContent": "Status\nOnline"
+        }
+      ],
+      "title": "Camera 1 Status",
+      "type": "stat",
+      "fieldConfig": {
+        "defaults": {
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              { "color": "green", "value": 0, "label": "Online" },
+              { "color": "red", "value": 0, "label": "Offline" },
+              { "color": "orange", "value": 0, "label": "Maintenance" }
+            ]
+          }
+        }
+      }
+    },
+    // Repeat for Cameras 2-20 (example for Camera 2)
+    {
+      "gridPos": { "h": 4, "w": 4, "x": 8, "y": 26 },
+      "id": 16,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "none",
+        "justifyMode": "center",
+        "orientation": "auto",
+        "reduceOptions": { "calcs": ["lastNotNull"], "fields": "", "values": false },
+        "text": { "fontSize": 20, "valueSize": 24 }
+      },
+      "pluginVersion": "10.2.0",
+      "targets": [
+        {
+          "datasource": { "type": "testdata", "uid": "grafana-testdata-datasource" },
+          "refId": "A",
+          "scenarioId": "random_walk",
+          "alias": "Camera 2 Success",
+          "lines": 1,
+          "points": 1,
+          "values": { "min": 85, "max": 90, "noise": 2 }
+        }
+      ],
+      "title": "Camera 2 Success (%)",
+      "type": "stat",
+      "fieldConfig": {
+        "defaults": {
+          "unit": "percent",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              { "color": "red", "value": 0 },
+              { "color": "orange", "value": 80 },
+              { "color": "green", "value": 90 }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "gridPos": { "h": 4, "w": 4, "x": 12, "y": 26 },
+      "id": 17,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "none",
+        "justifyMode": "center",
+        "orientation": "auto",
+        "reduceOptions": { "calcs": ["lastNotNull"], "fields": "", "values": false },
+        "text": { "fontSize": 20, "valueSize": 24 }
+      },
+      "pluginVersion": "10.2.0",
+      "targets": [
+        {
+          "datasource": { "type": "testdata", "uid": "grafana-testdata-datasource" },
+          "refId": "A",
+          "scenarioId": "csv_content",
+          "alias": "Camera 2 Status",
+          "csvContent": "Status\nOffline"
+        }
+      ],
+      "title": "Camera 2 Status",
+      "type": "stat",
+      "fieldConfig": {
+        "defaults": {
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              { "color": "green", "value": 0, "label": "Online" },
+              { "color": "red", "value": 0, "label": "Offline" },
+              { "color": "orange", "value": 0, "label": "Maintenance" }
+            ]
+          }
+        }
+      }
+    },
+    // Camera Inventory Table
+    {
+      "gridPos": { "h": 8, "w": 24, "x": 0, "y": 30 },
+      "id": 18,
+      "options": {
+        "showHeader": true,
+        "sortBy": [{ "desc": false, "displayName": "Camera ID" }]
+      },
+      "targets": [
+        {
+          "datasource": { "type": "testdata", "uid": "grafana-testdata-datasource" },
+          "refId": "A",
+          "scenarioId": "csv_content",
+          "alias": "Camera Inventory",
+          "csvContent": "Camera ID,Status,Success Rate,Failure Rate,Location,Uptime\nCAM001,Online,92,8,Main Hall,23.5\nCAM002,Offline,85,15,Entrance,20.0\nCAM003,Online,90,10,Stage,23.8\nCAM004,Maintenance,88,12,Lobby,22.0\nCAM005,Online,95,5,Backstage,23.9\nCAM006,Online,91,9,Main Hall,23.7\nCAM007,Online,93,7,Entrance,23.6\nCAM008,Online,89,11,Stage,23.4\nCAM009,Online,94,6,Lobby,23.8\nCAM010,Online,90,10,Backstage,23.5\nCAM011,Online,92,8,Main Hall,23.6\nCAM012,Online,91,9,Entrance,23.7\nCAM013,Online,93,7,Stage,23.8\nCAM014,Online,90,10,Lobby,23.5\nCAM015,Online,94,6,Backstage,23.9\nCAM016,Online,89,11,Main Hall,23.4\nCAM017,Online,92,8,Entrance,23.6\nCAM018,Online,91,9,Stage,23.7\nCAM019,Online,93,7,Lobby,23.8\nCAM020,Online,90,10,Backstage,23.5"
+        }
+      ],
+      "title": "Camera Inventory",
+      "type": "table",
+      "fieldConfig": {
+        "defaults": {
+          "custom": { "align": "auto", "cellOptions": { "type": "auto" }, "filterable": true }
+        }
+      }
+    },
+    // Crowd Management Time-Series
+    {
+      "gridPos": { "h": 6, "w": 24, "x": 0, "y": 38 },
+      "id": 19,
+      "options": {
+        "legend": { "calcs": [], "displayMode": "list", "placement": "bottom", "showLegend": true },
+        "tooltip": { "mode": "multi", "sort": "none" }
+      },
+      "targets": [
+        {
+          "datasource": { "type": "testdata", "uid": "grafana-testdata-datasource" },
+          "refId": "A",
+          "scenarioId": "random_walk",
+          "alias": "Crowd Density",
+          "lines": 10,
+          "points": 10,
+          "values": { "min": 50, "max": 90, "noise": 10 }
+        },
+        {
+          "datasource": { "type": "testdata", "uid": "grafana-testdata-datasource" },
+          "refId": "B",
+          "scenarioId": "random_walk",
+          "alias": "Entry Rate",
+          "lines": 10,
+          "points": 10,
+          "values": { "min": 5, "max": 20, "noise": 5 }
+        },
+        {
+          "datasource": { "type": "testdata", "uid": "grafana-testdata-datasource" },
+          "refId": "C",
+          "scenarioId": "random_walk",
+          "alias": "Exit Rate",
+          "lines": 10,
+          "points": 10,
+          "values": { "min": 5, "max": 15, "noise": 5 }
+        }
+      ],
+      "title": "Crowd Density & Movement Over Time",
+      "type": "timeseries",
+      "fieldConfig": {
+        "defaults": {
+          "color": { "mode": "palette-classic" },
+          "custom": {
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "fillOpacity": 20,
+            "gradientMode": "opacity",
+            "lineWidth": 2
+          }
+        }
+      }
+    },
+    // Zone-Wise Crowd Table
+    {
+      "gridPos": { "h": 6, "w": 24, "x": 0, "y": 44 },
+      "id": 20,
+      "options": {
+        "showHeader": true,
+        "sortBy": [{ "desc": false, "displayName": "Zone" }]
+      },
+      "targets": [
+        {
+          "datasource": { "type": "testdata", "uid": "grafana-testdata-datasource" },
+          "refId": "A",
+          "scenarioId": "csv_content",
+          "alias": "Crowd Stats",
+          "csvContent": "Zone,Density,Max Capacity,Alerts\nMain Hall,75,1000,None\nEntrance,85,500,Overcrowding\nStage,60,800,None\nLobby,70,600,None\nBackstage,50,300,None"
+        }
+      ],
+      "title": "Zone-Wise Crowd Statistics",
+      "type": "table",
+      "fieldConfig": {
+        "defaults": {
+          "custom": { "align": "auto", "cellOptions": { "type": "auto" }, "filterable": true }
+        }
+      }
+    },
+    // Dashboard Overview
+    {
+      "gridPos": { "h": 6, "w": 24, "x": 0, "y": 50 },
+      "id": 21,
+      "options": {
+        "content": "<div style='padding: 10px; background: #1f1f1f; border-radius: 5px; color: #ffffff;'>\n<h2>Smart Venue & Crowd Management Dashboard (Dummy Data)</h2>\n<p>Monitor simulated statistics for 20 cameras (feed success/failure, status) and crowd management (density, movement, alerts). Data is generated using Grafana's TestData DB. Use the tables to view detailed camera and zone data. Annotations mark maintenance and crowd alerts.</p>\n</div>",
+        "mode": "html"
+      },
+      "title": "Dashboard Overview",
+      "type": "text"
+    }
+  ],
+  "schemaVersion": 38,
+  "tags": ["smart-venue", "crowd-management", "dummy-data"],
+  "templating": {
+    "list": [
+      {
+        "current": { "selected": false, "text": "All", "value": "$__all" },
+        "hide": 0,
+        "includeAll": true,
+        "multi": true,
+        "name": "venue",
+        "options": [
+          { "selected": true, "text": "All", "value": "$__all" },
+          { "selected": false, "text": "Venue1", "value": "Venue1" },
+          { "selected": false, "text": "Venue2", "value": "Venue2" }
+        ],
+        "query": "Venue1,Venue2",
+        "queryValue": "",
+        "skipUrlSync": false,
+        "type": "custom"
+      }
+    ]
+  },
+  "time": { "from": "now-6h", "to": "now" },
+  "timepicker": {
+    "refresh_intervals": ["5s", "10s", "30s", "1m", "5m", "15m", "30m", "1h"],
+    "time_options": ["5m", "15m", "1h", "6h", "12h", "24h", "2d", "7d", "30d"]
+  },
+  "timezone": "",
+  "title": "Smart Venue & Crowd Management Dashboard",
+  "uid": "smart-venue-crowd-dummy-stats",
+  "version": 1,
+  "weekStart": ""
+}
